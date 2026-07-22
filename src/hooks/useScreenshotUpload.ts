@@ -1,0 +1,38 @@
+import { useState } from 'react'
+import { supabase } from '../lib/supabaseClient'
+import { useAuth } from '../context/AuthContext'
+
+const BUCKET = 'screenshots-temp'
+
+/**
+ * Uploads screenshots to the temp storage bucket so an Edge Function can
+ * read them for a single Claude vision call. The Edge Function deletes the
+ * objects from storage as soon as it's done — this hook never re-reads them.
+ */
+export function useScreenshotUpload() {
+  const { user } = useAuth()
+  const [uploading, setUploading] = useState(false)
+
+  const upload = async (files: File[]): Promise<string[]> => {
+    if (!user) throw new Error('Must be signed in to upload screenshots')
+    setUploading(true)
+    try {
+      const paths: string[] = []
+      for (const file of files) {
+        const ext = file.name.split('.').pop() ?? 'jpg'
+        const path = `${user.id}/${crypto.randomUUID()}.${ext}`
+        const { error } = await supabase.storage.from(BUCKET).upload(path, file, {
+          contentType: file.type,
+          upsert: false,
+        })
+        if (error) throw error
+        paths.push(path)
+      }
+      return paths
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  return { upload, uploading }
+}
