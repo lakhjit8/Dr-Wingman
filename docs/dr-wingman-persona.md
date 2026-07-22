@@ -427,9 +427,17 @@ JSON shape:
   "compatibility_notes": "string",
   "bridge_strategy": "string",
   "red_flags": ["string"],
-  "style_differences": ["string"]
+  "style_differences": ["string"],
+  "opening_messages": ["string", "string", "string"]
 }
 ```
+`opening_messages` is exactly 3 draft first messages the user could send this
+match, grounded in specific, concrete details from their profile (a prompt
+answer, a photo, a shared interest) rather than generic openers — vary the
+angle across the 3 (e.g. one playful/light, one curious/question-based, one
+that mirrors the match's own communication style back at them) so the user
+has real options, not 3 near-duplicates. Each should read as something an
+actual person would type, not a template with blanks.
 
 ### Mode: `message_coaching`
 Input: screenshots of a conversation thread and/or a new question from the

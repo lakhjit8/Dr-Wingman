@@ -90,6 +90,9 @@ Deno.serve(async (req) => {
 })
 
 function buildCoachSummary(analysis: Record<string, unknown>): string {
+  const openingMessages = Array.isArray(analysis.opening_messages)
+    ? (analysis.opening_messages as string[])
+    : []
   const lines = [
     `Communication style: ${analysis.communication_style ?? 'unclear'}`,
     '',
@@ -97,5 +100,8 @@ function buildCoachSummary(analysis: Record<string, unknown>): string {
     '',
     `Bridge strategy: ${analysis.bridge_strategy ?? ''}`,
   ]
+  if (openingMessages.length) {
+    lines.push('', 'A few opening messages to consider:', ...openingMessages.map((m, i) => `${i + 1}. ${m}`))
+  }
   return lines.join('\n').trim()
 }

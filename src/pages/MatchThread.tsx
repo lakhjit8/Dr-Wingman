@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useParams, Navigate } from 'react-router-dom'
+import { useParams, Navigate, Link } from 'react-router-dom'
 import { useMatchThread } from '../hooks/useMatchThread'
 import { useScreenshotUpload } from '../hooks/useScreenshotUpload'
 import { UploadDropzone } from '../components/UploadDropzone'
@@ -36,13 +36,22 @@ export function MatchThread() {
   return (
     <div className="flex h-[calc(100vh-8rem)] flex-col">
       <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-3">
-        <div>
-          <h1 className="text-lg font-semibold text-neutral-900">{match?.match_name ?? 'Match'}</h1>
-          {match?.style_summary && (
-            <span className="mt-0.5 inline-block rounded-full bg-wingman-100 px-2.5 py-0.5 text-xs font-medium text-wingman-700">
-              {match.style_summary.communication_style}
-            </span>
-          )}
+        <div className="flex items-center gap-3">
+          <Link
+            to="/matches"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-neutral-500 hover:bg-neutral-100"
+            aria-label="Back to matches"
+          >
+            ←
+          </Link>
+          <div>
+            <h1 className="text-lg font-semibold text-neutral-900">{match?.match_name ?? 'Match'}</h1>
+            {match?.style_summary && (
+              <span className="mt-0.5 inline-block rounded-full bg-wingman-100 px-2.5 py-0.5 text-xs font-medium text-wingman-700">
+                {match.style_summary.communication_style}
+              </span>
+            )}
+          </div>
         </div>
         <button
           onClick={() => setShowUpload((v) => !v)}

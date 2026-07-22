@@ -46,6 +46,7 @@ export interface MatchStyleSummary {
   bridge_strategy: string
   red_flags: string[]
   style_differences: string[]
+  opening_messages: string[]
 }
 
 export interface Match {
