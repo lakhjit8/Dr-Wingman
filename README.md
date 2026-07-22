@@ -118,6 +118,22 @@ supabase functions deploy coach-message
 `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are injected automatically
 into Edge Functions by Supabase — no need to set them manually.
 
+**If `supabase functions deploy` times out** (some sandboxed/CI environments
+can't complete the CLI's multi-asset upload): use
+`scripts/bundle-function-for-deploy.mjs`, which inlines `_shared/*` into a
+single self-contained file per function, then deploy that via the
+Management API's plain JSON endpoint instead of the CLI:
+
+```bash
+node scripts/bundle-function-for-deploy.mjs analyze-profile-photos > /tmp/bundle.ts
+curl -X POST "https://api.supabase.com/v1/projects/<project-ref>/functions" \
+  -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" \
+  --data "$(node -e "console.log(JSON.stringify({slug:'analyze-profile-photos',name:'analyze-profile-photos',verify_jwt:true,body:require('fs').readFileSync('/tmp/bundle.ts','utf-8')}))")"
+```
+
+Repeat per function. The repo's modular `supabase/functions/<name>/index.ts`
++ `_shared/*` stays the source of truth either way.
+
 ### 5. Run the frontend
 
 ```bash
