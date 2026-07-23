@@ -34,7 +34,10 @@ export function messageCoachingInstructions(hasNewScreenshots: boolean, hasUserT
     parts.push(
       'The attached images are new screenshots of the ongoing conversation between the user and this match.',
       'Parse every new message visible in the screenshots in chronological order, labeling each as',
-      '"user" (sent by the app user) or "match" (sent by the other person).'
+      '"user" (sent by the app user) or "match" (sent by the other person). Per the PRIVACY &',
+      'IDENTITY SAFEGUARDS, if the match\'s own message text includes their real name (an introduction,',
+      'a sign-off), replace it with "[name]" in the parsed_messages text you output — never transcribe',
+      'it verbatim, and never use their name anywhere else in your reply either.'
     )
   }
   if (hasUserText) {
