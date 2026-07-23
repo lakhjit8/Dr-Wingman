@@ -75,7 +75,7 @@ export function MatchList() {
               className="rounded-2xl border border-neutral-200 bg-white p-4 text-left hover:border-wingman-300 hover:shadow-sm"
             >
               <div className="flex items-center justify-between">
-                <h3 className="font-medium text-neutral-900">{m.match_name}</h3>
+                <h3 className="font-medium text-neutral-900">{m.match_label}</h3>
                 {m.style_summary && (
                   <span className="rounded-full bg-wingman-100 px-2.5 py-0.5 text-xs font-medium text-wingman-700">
                     {m.style_summary.communication_style}

@@ -30,6 +30,7 @@ export interface UserProfile {
   prompts: PromptSuggestion[]
   photo_analysis: ProfileAnalysis | null
   communication_style: CommunicationStyle | null
+  terms_accepted_at: string | null
   created_at: string
   updated_at: string
 }
@@ -53,7 +54,8 @@ export interface Match {
   id: string
   user_id: string
   platform: string | null
-  match_name: string
+  /** AI-generated, non-identifying display label — never the match's real name. */
+  match_label: string
   style_summary: MatchStyleSummary | null
   archived: boolean
   created_at: string

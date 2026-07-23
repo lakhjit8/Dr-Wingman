@@ -19,12 +19,12 @@ export function matchAnalysisInstructions(platform?: string): string {
     'The attached images are screenshots of a dating profile belonging to someone the user matched',
     platform ? `with on ${platform}` : 'with',
     '. Apply the PROFILE ANALYSIS FRAMEWORK and the Top 10 Psychological Compatibility Factors to',
-    'read their communication style and compatibility signals. Also extract their first name if',
-    'visible (for the match_name field of the JSON). Then draft 3 opening messages the user could',
-    'send this match, per the opening_messages field of the output contract.',
+    'read their communication style and compatibility signals. Per the PRIVACY & IDENTITY',
+    'SAFEGUARDS, never extract or output their real name, employer, school, or exact location —',
+    'generate label_traits instead (2 short non-identifying style/vibe descriptors). Then draft 3',
+    'opening messages the user could send this match, per the opening_messages field.',
     'End your reply with the match_analysis JSON block exactly as specified in the',
-    'APP-SPECIFIC OUTPUT CONTRACT. Add a "match_name" field to that JSON with the best guess at',
-    'their first name, or "Match" if not legible.',
+    'APP-SPECIFIC OUTPUT CONTRACT.',
   ].join(' ')
 }
 

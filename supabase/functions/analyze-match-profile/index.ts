@@ -52,12 +52,26 @@ Deno.serve(async (req) => {
       throw new Error('Dr. Wingman did not return a parseable match analysis')
     }
 
-    const matchName = typeof json.match_name === 'string' && json.match_name.trim() ? json.match_name : 'Match'
+    // Label date reflects when the match was first added, not re-analyzed —
+    // fetch the existing created_at on update so the label doesn't shift.
+    let labelDate = new Date()
+    if (matchId) {
+      const { data: existing } = await supabaseAdmin
+        .from('matches')
+        .select('created_at')
+        .eq('id', matchId)
+        .eq('user_id', user.id)
+        .maybeSingle()
+      if (existing?.created_at) labelDate = new Date(existing.created_at)
+    }
+
+    const traits = Array.isArray(json.label_traits) ? (json.label_traits as string[]) : []
+    const matchLabel = formatMatchLabel(traits, labelDate)
 
     const record = {
       user_id: user.id,
       platform: platform ?? null,
-      match_name: matchName,
+      match_label: matchLabel,
       style_summary: json,
     }
 
@@ -88,6 +102,18 @@ Deno.serve(async (req) => {
     await deleteScreenshots(paths)
   }
 })
+
+/**
+ * Never the match's real name — two AI-generated, non-identifying style
+ * traits plus the date the match was added, e.g. "Outdoorsy, direct
+ * communicator (Jul 21)".
+ */
+function formatMatchLabel(traits: string[], date: Date): string {
+  const clean = traits.filter((t) => typeof t === 'string' && t.trim()).slice(0, 2)
+  const traitPart = clean.length ? clean.join(', ') : 'New match'
+  const datePart = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  return `${traitPart} (${datePart})`
+}
 
 function buildCoachSummary(analysis: Record<string, unknown>): string {
   const openingMessages = Array.isArray(analysis.opening_messages)

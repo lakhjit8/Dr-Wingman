@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { MONETIZATION_MODE } from '../lib/featureFlags'
 
@@ -33,6 +34,14 @@ export function Settings() {
           analysis (bios, compatibility notes, parsed conversation history) is saved to your
           account.
         </p>
+        <div className="mt-3 flex gap-3 text-sm">
+          <Link to="/terms" target="_blank" rel="noopener noreferrer" className="text-wingman-700 underline">
+            Terms of Service
+          </Link>
+          <Link to="/privacy" target="_blank" rel="noopener noreferrer" className="text-wingman-700 underline">
+            Privacy Policy
+          </Link>
+        </div>
       </div>
     </div>
   )

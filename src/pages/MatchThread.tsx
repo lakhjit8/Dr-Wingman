@@ -45,7 +45,7 @@ export function MatchThread() {
             ←
           </Link>
           <div>
-            <h1 className="text-lg font-semibold text-neutral-900">{match?.match_name ?? 'Match'}</h1>
+            <h1 className="text-lg font-semibold text-neutral-900">{match?.match_label ?? 'Match'}</h1>
             {match?.style_summary && (
               <span className="mt-0.5 inline-block rounded-full bg-wingman-100 px-2.5 py-0.5 text-xs font-medium text-wingman-700">
                 {match.style_summary.communication_style}

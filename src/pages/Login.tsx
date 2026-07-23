@@ -1,10 +1,11 @@
 import { FormEvent, useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 export function Login() {
   const { user, signInWithEmail, signInWithOAuth } = useAuth()
   const [email, setEmail] = useState('')
+  const [agreed, setAgreed] = useState(false)
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [error, setError] = useState<string | null>(null)
 
@@ -12,6 +13,7 @@ export function Login() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+    if (!agreed) return
     setStatus('sending')
     setError(null)
     const { error: signInError } = await signInWithEmail(email)
@@ -31,16 +33,38 @@ export function Login() {
           Your AI dating communication coach.
         </p>
 
-        <div className="mt-6 space-y-2">
+        <label className="mt-6 flex items-start gap-2 text-xs text-neutral-600">
+          <input
+            type="checkbox"
+            checked={agreed}
+            onChange={(e) => setAgreed(e.target.checked)}
+            className="mt-0.5"
+          />
+          <span>
+            I'm 18 or older and agree to the{' '}
+            <Link to="/terms" target="_blank" rel="noopener noreferrer" className="text-wingman-700 underline">
+              Terms of Service
+            </Link>{' '}
+            and{' '}
+            <Link to="/privacy" target="_blank" rel="noopener noreferrer" className="text-wingman-700 underline">
+              Privacy Policy
+            </Link>
+            .
+          </span>
+        </label>
+
+        <div className="mt-4 space-y-2">
           <button
             onClick={() => void signInWithOAuth('google')}
-            className="w-full rounded-full border border-neutral-300 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50"
+            disabled={!agreed}
+            className="w-full rounded-full border border-neutral-300 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Continue with Google
           </button>
           <button
             onClick={() => void signInWithOAuth('apple')}
-            className="w-full rounded-full border border-neutral-300 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50"
+            disabled={!agreed}
+            className="w-full rounded-full border border-neutral-300 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Continue with Apple
           </button>
@@ -68,8 +92,8 @@ export function Login() {
             />
             <button
               type="submit"
-              disabled={status === 'sending'}
-              className="w-full rounded-full bg-wingman-600 py-2.5 text-sm font-medium text-white hover:bg-wingman-700 disabled:opacity-60"
+              disabled={status === 'sending' || !agreed}
+              className="w-full rounded-full bg-wingman-600 py-2.5 text-sm font-medium text-white hover:bg-wingman-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {status === 'sending' ? 'Sending link…' : 'Continue with email'}
             </button>
@@ -78,8 +102,7 @@ export function Login() {
         )}
 
         <p className="mt-6 text-center text-xs text-neutral-400">
-          By continuing you agree to our Terms of Service. You are responsible for how you use
-          generated content on third-party dating platforms.
+          You are responsible for how you use generated content on third-party dating platforms.
         </p>
       </div>
     </div>
