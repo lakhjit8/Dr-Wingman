@@ -18,11 +18,13 @@ export function matchAnalysisInstructions(platform?: string): string {
     'Mode: match_analysis.',
     'The attached images are screenshots of a dating profile belonging to someone the user matched',
     platform ? `with on ${platform}` : 'with',
-    '. Apply the PROFILE ANALYSIS FRAMEWORK and the Top 10 Psychological Compatibility Factors to',
-    'read their communication style and compatibility signals. Per the PRIVACY & IDENTITY',
-    'SAFEGUARDS, never extract or output their real name, employer, school, or exact location —',
-    'generate label_traits instead (2 short non-identifying style/vibe descriptors). Then draft 3',
-    'opening messages the user could send this match, per the opening_messages field.',
+    '. Apply the 5-LAYER ANALYSIS FRAMEWORK (Decode + Diagnose in particular), the PACING GUIDELINES,',
+    'the INVESTMENT THERMOMETER, and the COMPATIBILITY ASSESSMENT (green/yellow/red flags) to read',
+    'this match\'s profile. Per the SAFETY & PRIVACY REQUIREMENTS and the app-specific implementation',
+    'notes beneath them, never extract or output their real name, employer, school, or exact',
+    'location — generate label_traits instead (2 short non-identifying style/vibe descriptors). Then',
+    'draft 3 opening messages the user could send this match, per the opening_messages field,',
+    'applying the LENGTH RULE, ENERGY MATCHING, and EMOJI STRATEGY sections.',
     'End your reply with the match_analysis JSON block exactly as specified in the',
     'APP-SPECIFIC OUTPUT CONTRACT.',
   ].join(' ')
@@ -34,19 +36,22 @@ export function messageCoachingInstructions(hasNewScreenshots: boolean, hasUserT
     parts.push(
       'The attached images are new screenshots of the ongoing conversation between the user and this match.',
       'Parse every new message visible in the screenshots in chronological order, labeling each as',
-      '"user" (sent by the app user) or "match" (sent by the other person). Per the PRIVACY &',
-      'IDENTITY SAFEGUARDS, if the match\'s own message text includes their real name (an introduction,',
-      'a sign-off), replace it with "[name]" in the parsed_messages text you output — never transcribe',
-      'it verbatim, and never use their name anywhere else in your reply either.'
+      '"user" (sent by the app user) or "match" (sent by the other person). Per the SAFETY & PRIVACY',
+      'REQUIREMENTS\' app-specific implementation notes, if the match\'s own message text includes',
+      'their real name (an introduction, a sign-off), replace it with "[name]" in the parsed_messages',
+      'text you output — never transcribe it verbatim, and never use their name anywhere else in your',
+      'reply either.'
     )
   }
   if (hasUserText) {
     parts.push('The user also asked a direct question or gave an instruction — respond to it directly.')
   }
   parts.push(
-    'Apply the translation and coaching guidance to explain what the match is really communicating,',
-    'and draft 2-3 reply options the user can edit and send themselves. Keep the pacing target in mind',
-    '(date within ~4-6 messages) without ever sacrificing authenticity.',
+    'Apply LAYER 1 (Decode) and LAYER 2 (Diagnose) to explain what the match is really communicating,',
+    'then LAYER 4 (Strategize) to draft 2-3 reply options per the LENGTH RULE, ENERGY MATCHING, and',
+    'EMOJI STRATEGY sections. Apply LAYER 5 (Execute) and this match\'s PACING GUIDELINES tier',
+    '(fast/medium/slow, from prior context if known) to the momentum_note — never achieve pacing by',
+    'misrepresenting the user or manipulating the match; the means is always authentic communication.',
     'End your reply with the message_coaching JSON block exactly as specified in the',
     'APP-SPECIFIC OUTPUT CONTRACT.'
   )

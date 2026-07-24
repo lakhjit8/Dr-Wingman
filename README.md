@@ -41,6 +41,7 @@ docs/
   legal-hardening-migration-spec.md   Privacy/identity hardening spec + implementation status
   risk-verification-spec.md           Automated test coverage spec + implementation notes
   terms-privacy-final-spec.md         Terms/Privacy content spec (LLC name, versioning) + status
+  persona-update-spec-v2.md           Persona v2 rewrite spec + scope-resolution notes
 scripts/
   sync-persona.mjs                Regenerates functions/_shared/persona.ts from docs/dr-wingman-persona.md
   audit-ai-output.mjs              Admin spot-check tool — see "AI output monitoring"

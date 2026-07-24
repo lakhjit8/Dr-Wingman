@@ -124,15 +124,30 @@ function buildCoachSummary(analysis: Record<string, unknown>): string {
   const openingMessages = Array.isArray(analysis.opening_messages)
     ? (analysis.opening_messages as string[])
     : []
-  const lines = [
-    `Communication style: ${analysis.communication_style ?? 'unclear'}`,
-    '',
+  const greenFlags = Array.isArray(analysis.green_flags) ? (analysis.green_flags as string[]) : []
+  const redFlags = Array.isArray(analysis.red_flags) ? (analysis.red_flags as string[]) : []
+
+  const blocks = [
+    [`Pace: ${analysis.pace ?? 'unclear'}`, analysis.investment_read ? `Investment read: ${analysis.investment_read}` : '']
+      .filter(Boolean)
+      .join('\n'),
     String(analysis.compatibility_notes ?? ''),
-    '',
     `Bridge strategy: ${analysis.bridge_strategy ?? ''}`,
   ]
-  if (openingMessages.length) {
-    lines.push('', 'A few opening messages to consider:', ...openingMessages.map((m, i) => `${i + 1}. ${m}`))
+  if (greenFlags.length || redFlags.length) {
+    blocks.push(
+      [
+        greenFlags.length ? `Green flags: ${greenFlags.join(', ')}` : '',
+        redFlags.length ? `Red flags: ${redFlags.join(', ')}` : '',
+      ]
+        .filter(Boolean)
+        .join('\n')
+    )
   }
-  return lines.join('\n').trim()
+  if (openingMessages.length) {
+    blocks.push(
+      ['A few opening messages to consider:', ...openingMessages.map((m, i) => `${i + 1}. ${m}`)].join('\n')
+    )
+  }
+  return blocks.filter(Boolean).join('\n\n').trim()
 }

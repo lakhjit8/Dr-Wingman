@@ -1,5 +1,8 @@
 export type CommunicationStyle = 'action-oriented' | 'emotional-relational' | 'balanced'
 
+/** Match-analysis pacing tier (persona v2's PACING GUIDELINES) — how many messages before suggesting a meetup. */
+export type MatchPace = 'fast' | 'medium' | 'slow'
+
 export interface PromptSuggestion {
   prompt: string
   answer: string
@@ -37,18 +40,14 @@ export interface UserProfile {
   updated_at: string
 }
 
-export interface CompatibilityFactor {
-  factor: string
-  read: string
-}
-
 export interface MatchStyleSummary {
-  communication_style: CommunicationStyle
-  compatibility_factors: CompatibilityFactor[]
+  pace: MatchPace
+  investment_read: string
   compatibility_notes: string
   bridge_strategy: string
+  green_flags: string[]
+  yellow_flags: string[]
   red_flags: string[]
-  style_differences: string[]
   opening_messages: string[]
 }
 

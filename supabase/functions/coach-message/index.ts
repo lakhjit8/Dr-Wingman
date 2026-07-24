@@ -84,7 +84,7 @@ Deno.serve(async (req) => {
     }
 
     const contextPrefix = [
-      `Known communication style for this match: ${match.style_summary?.communication_style ?? 'unknown'}.`,
+      `Known pace for this match: ${match.style_summary?.pace ?? 'unknown'}.`,
       historyText ? `Conversation and coaching history so far:\n${historyText}` : 'No prior conversation history.',
     ].join('\n\n')
 

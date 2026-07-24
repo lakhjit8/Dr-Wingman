@@ -78,7 +78,7 @@ export function MatchList() {
                 <h3 className="font-medium text-neutral-900">{m.match_label}</h3>
                 {m.style_summary && (
                   <span className="rounded-full bg-wingman-100 px-2.5 py-0.5 text-xs font-medium text-wingman-700">
-                    {m.style_summary.communication_style}
+                    {m.style_summary.pace} pace
                   </span>
                 )}
               </div>
