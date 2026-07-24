@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { LLC_LEGAL_NAME, EFFECTIVE_DATE } from '../lib/legal'
 
 export function Terms() {
   return (
@@ -7,9 +8,14 @@ export function Terms() {
         ← Back
       </Link>
       <h1 className="mt-4 text-2xl font-semibold text-neutral-900">Terms of Service</h1>
+      <p className="mt-2 text-sm text-neutral-500">
+        Effective Date: {EFFECTIVE_DATE}
+        <br />
+        Operated by: {LLC_LEGAL_NAME}, a California limited liability company
+      </p>
       <p className="mt-2 text-sm italic text-neutral-500">
-        Working draft — not final legal advice. Review with counsel before relying on this as your
-        binding terms.
+        Founder-assembled draft — not final legal advice. Pending attorney review before this goes
+        live publicly.
       </p>
 
       <div className="prose-sm mt-6 space-y-5 text-sm leading-relaxed text-neutral-700">
@@ -65,10 +71,10 @@ export function Terms() {
             </li>
           </ul>
           <p className="mt-2">
-            <strong>Indemnification.</strong> You agree to indemnify and hold Dr. Wingman harmless
-            from any claim, damage, or legal proceeding arising from content you upload, including
-            claims brought by a third party (such as a match) whose likeness or information you
-            shared with the app without their knowledge.
+            <strong>Indemnification.</strong> You agree to indemnify and hold {LLC_LEGAL_NAME}{' '}
+            harmless from any claim, damage, or legal proceeding arising from content you upload,
+            including claims brought by a third party (such as a match) whose likeness or
+            information you shared with the app without their knowledge.
           </p>
         </section>
 
@@ -118,10 +124,9 @@ export function Terms() {
           <p>
             Dr. Wingman provides AI-generated coaching and analysis for entertainment and
             self-improvement purposes. It is <strong>not</strong> psychological, psychiatric,
-            therapeutic, or counseling services, and the "Dr. Wingman" persona is a product
-            feature, not a licensed professional. AI-generated analysis of a profile or photo is
-            an automated interpretation and may be inaccurate, incomplete, or wrong. Do not rely
-            on it as a factual or clinical assessment of yourself or another person. Analysis and
+            therapeutic, or counseling services. AI-generated analysis of a profile or photo is an
+            automated interpretation and may be inaccurate, incomplete, or wrong. Do not rely on
+            it as a factual or clinical assessment of yourself or another person. Analysis and
             labels describing a match reflect the app's interpretation of their public profile
             content, not a verified or factual characterization of that person.
           </p>
@@ -150,10 +155,10 @@ export function Terms() {
         <section>
           <h2 className="text-base font-semibold text-neutral-900">9. Limitation of Liability</h2>
           <p>
-            To the maximum extent permitted by law, Dr. Wingman and its operators are not liable
-            for indirect, incidental, or consequential damages arising from your use of the app,
-            including damages arising from your interactions with other individuals, third-party
-            platforms, or reliance on AI-generated content.
+            To the maximum extent permitted by law, {LLC_LEGAL_NAME} and its members and operators
+            are not liable for indirect, incidental, or consequential damages arising from your
+            use of the app, including damages arising from your interactions with other
+            individuals, third-party platforms, or reliance on AI-generated content.
           </p>
         </section>
 
@@ -168,16 +173,19 @@ export function Terms() {
 
         <section>
           <h2 className="text-base font-semibold text-neutral-900">11. Governing Law & Disputes</h2>
-          <p className="italic text-neutral-500">
-            To be completed with counsel — governing state, arbitration clause if desired, class
-            action waiver if desired.
+          <p>
+            These Terms are governed by the laws of the State of California, without regard to
+            conflict-of-law principles. Any dispute arising from these Terms or your use of the
+            app shall be resolved in the state or federal courts located in San Joaquin County,
+            California, and you consent to personal jurisdiction there.
           </p>
         </section>
 
         <section>
           <h2 className="text-base font-semibold text-neutral-900">12. Changes to These Terms</h2>
           <p>
-            We may update these Terms from time to time; continued use after changes constitutes
+            We may update these Terms from time to time. Material changes will require
+            re-acceptance on next login; continued use after non-material changes constitutes
             acceptance.
           </p>
         </section>

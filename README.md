@@ -40,6 +40,7 @@ docs/
   dr-wingman-persona.md           AI persona / system prompt (source of truth)
   legal-hardening-migration-spec.md   Privacy/identity hardening spec + implementation status
   risk-verification-spec.md           Automated test coverage spec + implementation notes
+  terms-privacy-final-spec.md         Terms/Privacy content spec (LLC name, versioning) + status
 scripts/
   sync-persona.mjs                Regenerates functions/_shared/persona.ts from docs/dr-wingman-persona.md
   audit-ai-output.mjs              Admin spot-check tool — see "AI output monitoring"

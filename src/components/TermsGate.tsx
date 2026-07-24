@@ -4,13 +4,16 @@ import { useProfile } from '../hooks/useProfile'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../context/AuthContext'
 import { LoadingSpinner } from './LoadingSpinner'
+import { CURRENT_TERMS_VERSION } from '../lib/legal'
 
 /**
  * Blocks access to the rest of the app until the user has accepted the
- * Terms/Privacy Policy at least once. Enforced here (post-login) rather than
- * only at signup because OAuth (Google/Apple) redirects straight past any
- * client-side signup checkbox — this is the one gate every auth method
- * passes through.
+ * *current version* of the Terms/Privacy Policy. Version-based (not just a
+ * boolean) so bumping CURRENT_TERMS_VERSION re-prompts every account that
+ * already accepted an older version, not just first-time users. Enforced
+ * here (post-login) rather than only at signup because OAuth (Google/Apple)
+ * redirects straight past any client-side signup checkbox — this is the one
+ * gate every auth method and every existing account passes through.
  */
 export function TermsGate({ children }: { children: ReactNode }) {
   const { user } = useAuth()
@@ -20,7 +23,7 @@ export function TermsGate({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null)
 
   if (loading) return <LoadingSpinner />
-  if (profile?.terms_accepted_at) return <>{children}</>
+  if (profile?.terms_version === CURRENT_TERMS_VERSION) return <>{children}</>
 
   const handleAccept = async () => {
     if (!user || !checked) return
@@ -28,7 +31,7 @@ export function TermsGate({ children }: { children: ReactNode }) {
     setError(null)
     const { error: updateError } = await supabase
       .from('profiles')
-      .update({ terms_accepted_at: new Date().toISOString() })
+      .update({ terms_accepted_at: new Date().toISOString(), terms_version: CURRENT_TERMS_VERSION })
       .eq('id', user.id)
     if (updateError) {
       setError(updateError.message)

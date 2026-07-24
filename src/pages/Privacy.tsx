@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { LLC_LEGAL_NAME, EFFECTIVE_DATE } from '../lib/legal'
 
 export function Privacy() {
   return (
@@ -7,9 +8,14 @@ export function Privacy() {
         ← Back
       </Link>
       <h1 className="mt-4 text-2xl font-semibold text-neutral-900">Privacy Policy</h1>
+      <p className="mt-2 text-sm text-neutral-500">
+        Effective Date: {EFFECTIVE_DATE}
+        <br />
+        Operated by: {LLC_LEGAL_NAME}, a California limited liability company
+      </p>
       <p className="mt-2 text-sm italic text-neutral-500">
-        Working draft — not final legal advice. Review with counsel before relying on this as your
-        binding policy.
+        Founder-assembled draft — not final legal advice. Pending attorney review before this goes
+        live publicly.
       </p>
 
       <div className="prose-sm mt-6 space-y-5 text-sm leading-relaxed text-neutral-700">
@@ -92,13 +98,17 @@ export function Privacy() {
           </p>
         </section>
 
-        <p className="border-t border-neutral-200 pt-4 text-xs text-neutral-400">
-          Questions about this Privacy Policy? Contact{' '}
-          <a href="mailto:lakhjitsingh8@gmail.com" className="underline">
-            lakhjitsingh8@gmail.com
-          </a>
-          .
-        </p>
+        <section>
+          <h2 className="text-base font-semibold text-neutral-900">Contact</h2>
+          <p>
+            Questions about these Terms or this Privacy Policy:{' '}
+            <a href="mailto:lakhjitsingh8@gmail.com" className="underline">
+              lakhjitsingh8@gmail.com
+            </a>
+            , or by mail at {LLC_LEGAL_NAME}'s registered address on file with the California
+            Secretary of State.
+          </p>
+        </section>
       </div>
     </div>
   )
