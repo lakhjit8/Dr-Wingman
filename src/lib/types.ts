@@ -31,6 +31,7 @@ export interface UserProfile {
   photo_analysis: ProfileAnalysis | null
   communication_style: CommunicationStyle | null
   terms_accepted_at: string | null
+  safety_notice_shown_at: string | null
   created_at: string
   updated_at: string
 }

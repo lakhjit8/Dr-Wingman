@@ -38,7 +38,12 @@ supabase/
 docs/
   product-spec.md                 Product spec
   dr-wingman-persona.md           AI persona / system prompt (source of truth)
-scripts/sync-persona.mjs          Regenerates functions/_shared/persona.ts from docs/dr-wingman-persona.md
+  legal-hardening-migration-spec.md   Privacy/identity hardening spec + implementation status
+  risk-verification-spec.md           Automated test coverage spec + implementation notes
+scripts/
+  sync-persona.mjs                Regenerates functions/_shared/persona.ts from docs/dr-wingman-persona.md
+  audit-ai-output.mjs              Admin spot-check tool — see "AI output monitoring"
+tests/                             Integration test suite — see "Testing"
 ```
 
 ## How screenshot handling works
@@ -139,6 +144,68 @@ Repeat per function. The repo's modular `supabase/functions/<name>/index.ts`
 ```bash
 npm run dev
 ```
+
+## Testing
+
+The test suite (`tests/`, run via `npm test`) is **integration tests against
+a real Supabase project and the real Claude API** — not mocked units. It
+exists to prove the privacy/security claims made in this README and the
+Terms/Privacy docs are actually true in the running code, per
+`docs/risk-verification-spec.md`'s core premise: an unverified policy is the
+same risk as no policy. Covers:
+
+- No image persistence, on both the success path and a forced-failure path
+  (`tests/persistence.test.ts`)
+- No name leakage into any stored field or log line
+  (`tests/name-leakage.test.ts`, using a synthetic fixture image —
+  `tests/fixtures/name-leak-test.png` — so no real person's data is ever
+  used in a test)
+- No image data (base64, storage URLs, raw paths) in logs, success or error
+  path (`tests/logs.test.ts`)
+- Row-level access control enforced at the database layer, not just hidden
+  by the UI (`tests/access-control.test.ts`)
+- `match_label` format compliance against real usage data
+  (`tests/label-format.test.ts`)
+
+### Running locally
+
+```bash
+cp tests/.env.test.example tests/.env.test   # fill in your project's values
+supabase secrets set TEST_MODE_SECRET=some-long-random-string
+npm test
+```
+
+`TEST_MODE_SECRET` lets the test suite force a simulated Claude API failure
+(to test the cleanup-on-error path) without spending a real API call — it
+must match between the Edge Function secret and `tests/.env.test`. Tests
+create and delete their own throwaway users; they don't touch real user
+data except read-only queries in `label-format.test.ts` against whatever
+matches already exist.
+
+### CI
+
+`.github/workflows/test.yml` runs lint + build on every push, then the full
+integration suite (gated on that passing) with results uploaded as a build
+artifact. Requires these repository secrets: `SUPABASE_URL`,
+`SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_PROJECT_REF`,
+`SUPABASE_ACCESS_TOKEN`, `TEST_MODE_SECRET`. A failing test fails the
+workflow — this is meant to block deploys, not just log a warning.
+
+## AI output monitoring
+
+`scripts/audit-ai-output.mjs` is an admin-only (not user-facing) spot-check
+tool — pulls a recent sample of `match_label`/`compatibility_notes` values
+and flags anything that looks like an unhedged character claim, a possible
+name/job title, or a label that doesn't match the expected format, for
+periodic human review (weekly early on, monthly once stable):
+
+```bash
+SUPABASE_PROJECT_REF=... SUPABASE_ACCESS_TOKEN=... node scripts/audit-ai-output.mjs
+```
+
+It's heuristic (regex/keyword based), not exhaustive — false positives are
+expected and fine, since a human reads the flagged output rather than
+anything being auto-rejected.
 
 ## Deploying the frontend
 

@@ -7,6 +7,7 @@ import {
 } from '../_shared/supabaseAdmin.ts'
 import { callDrWingman } from '../_shared/claude.ts'
 import { messageCoachingInstructions } from '../_shared/modeInstructions.ts'
+import { shouldSimulateFailure } from '../_shared/testMode.ts'
 
 interface ParsedMessage {
   sender: 'user' | 'match'
@@ -77,6 +78,10 @@ Deno.serve(async (req) => {
       .join('\n')
 
     const images = await Promise.all(paths.map(downloadScreenshotAsBase64))
+
+    if (shouldSimulateFailure(req)) {
+      throw new Error('Simulated Claude API failure (test mode)')
+    }
 
     const contextPrefix = [
       `Known communication style for this match: ${match.style_summary?.communication_style ?? 'unknown'}.`,

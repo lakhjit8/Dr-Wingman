@@ -1,0 +1,53 @@
+name: Test
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+jobs:
+  build-and-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+
+  privacy-and-security-tests:
+    runs-on: ubuntu-latest
+    needs: build-and-lint
+    # Integration tests against the live Supabase project + real Claude API.
+    # Requires these repository secrets to be configured (Settings > Secrets
+    # and variables > Actions): SUPABASE_URL, SUPABASE_ANON_KEY,
+    # SUPABASE_SERVICE_ROLE_KEY, SUPABASE_PROJECT_REF, SUPABASE_ACCESS_TOKEN,
+    # TEST_MODE_SECRET (the last must match the Edge Function secret of the
+    # same name). A failing test here blocks the deploy — this is the "proof
+    # it actually works," not a one-time manual check.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          TEST_MODE_SECRET: ${{ secrets.TEST_MODE_SECRET }}
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitest-report
+          path: |
+            **/vitest-report.json
+          if-no-files-found: ignore

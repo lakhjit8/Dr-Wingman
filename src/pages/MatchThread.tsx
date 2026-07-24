@@ -2,14 +2,17 @@ import { useState } from 'react'
 import { useParams, Navigate, Link } from 'react-router-dom'
 import { useMatchThread } from '../hooks/useMatchThread'
 import { useScreenshotUpload } from '../hooks/useScreenshotUpload'
+import { useProfile } from '../hooks/useProfile'
 import { UploadDropzone } from '../components/UploadDropzone'
 import { ChatBubble } from '../components/ChatBubble'
 import { LoadingSpinner } from '../components/LoadingSpinner'
+import { SafetyNotice } from '../components/SafetyNotice'
 
 export function MatchThread() {
   const { matchId } = useParams<{ matchId: string }>()
   const { match, messages, loading, coaching, error, sendToCoach } = useMatchThread(matchId)
   const { upload, uploading } = useScreenshotUpload()
+  const { profile } = useProfile()
   const [pendingFiles, setPendingFiles] = useState<File[]>([])
   const [showUpload, setShowUpload] = useState(false)
   const [question, setQuestion] = useState('')
@@ -35,6 +38,7 @@ export function MatchThread() {
 
   return (
     <div className="flex h-[calc(100vh-8rem)] flex-col">
+      {profile && <SafetyNotice alreadyShown={Boolean(profile.safety_notice_shown_at)} />}
       <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-3">
         <div className="flex items-center gap-3">
           <Link

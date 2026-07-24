@@ -7,6 +7,7 @@ import {
 } from '../_shared/supabaseAdmin.ts'
 import { callDrWingman } from '../_shared/claude.ts'
 import { profileBuilderInstructions } from '../_shared/modeInstructions.ts'
+import { shouldSimulateFailure } from '../_shared/testMode.ts'
 
 Deno.serve(async (req) => {
   const optionsResponse = handleOptions(req)
@@ -42,6 +43,10 @@ Deno.serve(async (req) => {
     }
 
     const images = await Promise.all(paths.map(downloadScreenshotAsBase64))
+
+    if (shouldSimulateFailure(req)) {
+      throw new Error('Simulated Claude API failure (test mode)')
+    }
 
     const { json } = await callDrWingman({
       modeInstructions: profileBuilderInstructions(interviewNotes),

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { MONETIZATION_MODE } from '../lib/featureFlags'
+import { SAFETY_NOTICE_TEXT } from '../components/SafetyNotice'
 
 export function Settings() {
   const { user, signOut } = useAuth()
@@ -42,6 +43,15 @@ export function Settings() {
             Privacy Policy
           </Link>
         </div>
+      </div>
+
+      <div className="rounded-2xl border border-neutral-200 bg-white p-5">
+        <h2 className="text-sm font-semibold text-neutral-700">Meeting someone new? A few reminders:</h2>
+        <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-neutral-500">
+          {SAFETY_NOTICE_TEXT.map((line) => (
+            <li key={line}>{line}</li>
+          ))}
+        </ul>
       </div>
     </div>
   )
