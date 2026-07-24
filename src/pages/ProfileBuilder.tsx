@@ -3,6 +3,7 @@ import { useProfile } from '../hooks/useProfile'
 import { useScreenshotUpload } from '../hooks/useScreenshotUpload'
 import { UploadDropzone } from '../components/UploadDropzone'
 import { LoadingSpinner } from '../components/LoadingSpinner'
+import { AnalysisLoadingState } from '../components/AnalysisLoadingState'
 
 export function ProfileBuilder() {
   const { profile, loading, analyzing, error, analyzePhotos } = useProfile()
@@ -56,12 +57,16 @@ export function ProfileBuilder() {
       <button
         onClick={() => void handleAnalyze()}
         disabled={!pendingFiles.length || busy}
-        className="rounded-full bg-wingman-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-wingman-700 disabled:opacity-50"
+        className="min-h-[44px] rounded-full bg-wingman-600 px-5 text-sm font-medium text-white hover:bg-wingman-700 disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-400"
       >
         {busy ? 'Analyzing…' : 'Analyze photos & build profile'}
       </button>
+      {!pendingFiles.length && !busy && (
+        <p className="-mt-4 text-xs text-neutral-400">Select photos above to enable this.</p>
+      )}
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {busy && <AnalysisLoadingState />}
+      {error && <p className="text-sm text-danger-700">{error}</p>}
 
       {analysis && (
         <div className="space-y-5 rounded-2xl border border-neutral-200 bg-white p-6">

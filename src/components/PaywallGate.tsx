@@ -31,7 +31,7 @@ export function PaywallGate({ hasAccess, children }: PaywallGateProps) {
     <div className="rounded-2xl border border-wingman-200 bg-wingman-50 p-6 text-center">
       <h3 className="text-lg font-semibold text-wingman-800">{copy.title}</h3>
       <p className="mt-1 text-sm text-neutral-600">{copy.body}</p>
-      <button className="mt-4 rounded-full bg-wingman-600 px-5 py-2 text-sm font-medium text-white hover:bg-wingman-700">
+      <button className="mt-4 min-h-[44px] rounded-full bg-wingman-600 px-5 text-sm font-medium text-white hover:bg-wingman-700">
         {MONETIZATION_MODE === 'subscription' ? 'Subscribe' : 'Unlock'}
       </button>
     </div>

@@ -15,7 +15,7 @@ export function Settings() {
         <p className="mt-1 text-sm text-neutral-500">{user?.email ?? 'Signed in'}</p>
         <button
           onClick={() => void signOut()}
-          className="mt-4 rounded-full border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50"
+          className="mt-4 min-h-[44px] rounded-full border border-neutral-300 px-4 text-sm font-medium text-neutral-700 hover:bg-neutral-50"
         >
           Sign out
         </button>

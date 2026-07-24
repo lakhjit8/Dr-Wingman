@@ -6,6 +6,31 @@ html, body, #root {
   height: 100%;
 }
 
+html {
+  font-size: 16px; /* never smaller — this app is read-heavy (analysis/coaching text) */
+}
+
 body {
   @apply bg-neutral-50 text-neutral-900 antialiased;
+  font-family: 'Public Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+}
+
+/* Visible keyboard focus on every interactive element — accessibility, not just a desktop nicety. */
+:focus-visible {
+  outline: 2px solid theme('colors.wingman.500');
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

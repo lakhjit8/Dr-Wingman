@@ -22,10 +22,16 @@ export function SafetyNotice({ alreadyShown }: { alreadyShown: boolean }) {
 
   useEffect(() => {
     if (alreadyShown || !user) return
-    void supabase
+    supabase
       .from('profiles')
       .update({ safety_notice_shown_at: new Date().toISOString() })
       .eq('id', user.id)
+      .then(({ error }) => {
+        // Compliance record-keeping depends on this write landing — if it
+        // silently failed, the modal would otherwise reappear on every
+        // visit indefinitely with no trace of why.
+        if (error) console.error('Failed to record safety notice shown:', error.message)
+      })
   }, [alreadyShown, user])
 
   if (!visible) return null
@@ -41,7 +47,7 @@ export function SafetyNotice({ alreadyShown }: { alreadyShown: boolean }) {
         </ul>
         <button
           onClick={() => setVisible(false)}
-          className="mt-5 w-full rounded-full bg-wingman-600 py-2.5 text-sm font-medium text-white hover:bg-wingman-700"
+          className="mt-5 min-h-[44px] w-full rounded-full bg-wingman-600 py-2.5 text-sm font-medium text-white hover:bg-wingman-700"
         >
           Got it
         </button>

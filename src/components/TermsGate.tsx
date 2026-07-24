@@ -68,11 +68,11 @@ export function TermsGate({ children }: { children: ReactNode }) {
           />
           I have read and agree to the Terms of Service and Privacy Policy.
         </label>
-        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+        {error && <p className="mt-2 text-sm text-danger-700">{error}</p>}
         <button
           onClick={() => void handleAccept()}
           disabled={!checked || saving}
-          className="mt-4 w-full rounded-full bg-wingman-600 py-2.5 text-sm font-medium text-white hover:bg-wingman-700 disabled:opacity-50"
+          className="mt-4 min-h-[44px] w-full rounded-full bg-wingman-600 py-2.5 text-sm font-medium text-white hover:bg-wingman-700 disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-400"
         >
           {saving ? 'Saving…' : 'Agree and continue'}
         </button>

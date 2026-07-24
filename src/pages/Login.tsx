@@ -57,14 +57,14 @@ export function Login() {
           <button
             onClick={() => void signInWithOAuth('google')}
             disabled={!agreed}
-            className="w-full rounded-full border border-neutral-300 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="min-h-[44px] w-full rounded-full border border-neutral-300 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Continue with Google
           </button>
           <button
             onClick={() => void signInWithOAuth('apple')}
             disabled={!agreed}
-            className="w-full rounded-full border border-neutral-300 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="min-h-[44px] w-full rounded-full border border-neutral-300 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Continue with Apple
           </button>
@@ -88,16 +88,16 @@ export function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full rounded-full border border-neutral-300 px-4 py-2.5 text-sm focus:border-wingman-500 focus:outline-none"
+              className="w-full rounded-full border border-neutral-300 px-4 py-2.5 text-base focus:border-wingman-500 focus:outline-none sm:text-sm"
             />
             <button
               type="submit"
               disabled={status === 'sending' || !agreed}
-              className="w-full rounded-full bg-wingman-600 py-2.5 text-sm font-medium text-white hover:bg-wingman-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="min-h-[44px] w-full rounded-full bg-wingman-600 py-2.5 text-sm font-medium text-white hover:bg-wingman-700 disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-400"
             >
               {status === 'sending' ? 'Sending link…' : 'Continue with email'}
             </button>
-            {error && <p className="text-center text-sm text-red-600">{error}</p>}
+            {error && <p className="text-center text-sm text-danger-700">{error}</p>}
           </form>
         )}
 
