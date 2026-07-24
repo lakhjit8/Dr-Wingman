@@ -48,13 +48,13 @@ Deno.serve(async (req) => {
       throw new Error('Simulated Claude API failure (test mode)')
     }
 
-    const { json } = await callDrWingman({
+    const { json, stopReason } = await callDrWingman({
       modeInstructions: matchAnalysisInstructions(platform),
       images,
     })
 
     if (!json) {
-      throw new Error('Dr. Wingman did not return a parseable match analysis')
+      throw new Error(`Dr. Wingman did not return a parseable match analysis (stop_reason: ${stopReason})`)
     }
 
     // Label date reflects when the match was first added, not re-analyzed —

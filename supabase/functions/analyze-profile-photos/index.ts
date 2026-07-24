@@ -48,13 +48,13 @@ Deno.serve(async (req) => {
       throw new Error('Simulated Claude API failure (test mode)')
     }
 
-    const { json } = await callDrWingman({
+    const { json, stopReason } = await callDrWingman({
       modeInstructions: profileBuilderInstructions(interviewNotes),
       images,
     })
 
     if (!json) {
-      throw new Error('Dr. Wingman did not return a parseable profile analysis')
+      throw new Error(`Dr. Wingman did not return a parseable profile analysis (stop_reason: ${stopReason})`)
     }
 
     const { error: upsertError } = await supabaseAdmin

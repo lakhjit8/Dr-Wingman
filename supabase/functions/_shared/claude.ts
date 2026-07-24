@@ -23,7 +23,7 @@ export async function callDrWingman(opts: {
   modeInstructions: string
   images?: ImageInput[]
   userText?: string
-}): Promise<{ text: string; json: Record<string, unknown> | null }> {
+}): Promise<{ text: string; json: Record<string, unknown> | null; stopReason: string | undefined }> {
   const content: ContentBlock[] = []
 
   for (const img of opts.images ?? []) {
@@ -46,7 +46,12 @@ export async function callDrWingman(opts: {
     },
     body: JSON.stringify({
       model: CLAUDE_MODEL,
-      max_tokens: 4096,
+      // Persona v2's OUTPUT FORMAT is a full multi-section analysis (Client
+      // Context, Psychological Profile, 3-5 ranked Response Options each
+      // with sub-fields, What NOT to Say, Compatibility Assessment, etc.)
+      // before the trailing JSON block — 4096 was cutting the response off
+      // before it ever reached the JSON, causing every request to fail.
+      max_tokens: 8192,
       system: DR_WINGMAN_PERSONA,
       messages: [{ role: 'user', content }],
     }),
@@ -63,7 +68,7 @@ export async function callDrWingman(opts: {
     .map((b: { text: string }) => b.text)
     .join('\n')
 
-  return { text, json: extractJsonBlock(text) }
+  return { text, json: extractJsonBlock(text), stopReason: data.stop_reason }
 }
 
 function extractJsonBlock(text: string): Record<string, unknown> | null {

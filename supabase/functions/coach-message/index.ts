@@ -88,14 +88,14 @@ Deno.serve(async (req) => {
       historyText ? `Conversation and coaching history so far:\n${historyText}` : 'No prior conversation history.',
     ].join('\n\n')
 
-    const { json } = await callDrWingman({
+    const { json, stopReason } = await callDrWingman({
       modeInstructions: `${contextPrefix}\n\n${messageCoachingInstructions(paths.length > 0, Boolean(userText))}`,
       images,
       userText,
     })
 
     if (!json) {
-      throw new Error('Dr. Wingman did not return a parseable coaching response')
+      throw new Error(`Dr. Wingman did not return a parseable coaching response (stop_reason: ${stopReason})`)
     }
 
     const parsedMessages = (Array.isArray(json.parsed_messages) ? json.parsed_messages : []) as ParsedMessage[]
