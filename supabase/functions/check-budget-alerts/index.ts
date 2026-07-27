@@ -3,7 +3,11 @@ import { supabaseAdmin } from '../_shared/supabaseAdmin.ts'
 import { getCurrentMonthSpend } from '../_shared/spendingGuard.ts'
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
-const ALERT_EMAIL_TO = Deno.env.get('ALERT_EMAIL_TO') ?? 'ldvendingllc@gmail.com'
+// The Resend sandbox sender (onboarding@resend.dev, used until a domain is
+// verified) can only send to the email address the Resend account itself
+// is registered under — defaulting to ldvendingllc@gmail.com here would
+// 403. Verify a domain in Resend to unlock sending to other addresses.
+const ALERT_EMAIL_TO = Deno.env.get('ALERT_EMAIL_TO') ?? 'lakhjitsingh8@gmail.com'
 const ALERT_EMAIL_FROM = Deno.env.get('ALERT_EMAIL_FROM') ?? 'onboarding@resend.dev'
 
 type Tier = 'alert' | 'soft_stop' | 'hard_stop' | null

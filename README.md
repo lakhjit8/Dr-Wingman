@@ -131,13 +131,14 @@ into Edge Functions by Supabase — no need to set them manually.
 
 ```bash
 supabase secrets set RESEND_API_KEY=re_your-key
-supabase secrets set ALERT_EMAIL_TO=ldvendingllc@gmail.com   # optional, this is the default
+supabase secrets set ALERT_EMAIL_TO=lakhjitsingh8@gmail.com   # optional, this is the default
 ```
 
 Without a verified sending domain in Resend, the default `ALERT_EMAIL_FROM`
-(`onboarding@resend.dev`) only works for sending to the address on the
-Resend account itself — verify a domain in the Resend dashboard if alerts
-need to go to a different address. If `RESEND_API_KEY` isn't set, the
+(`onboarding@resend.dev`) only works for sending to the address the Resend
+account itself is registered under (currently `lakhjitsingh8@gmail.com`) —
+verify a domain in the Resend dashboard to send to a different address
+(e.g. `ldvendingllc@gmail.com`). If `RESEND_API_KEY` isn't set, the
 function logs and skips sending rather than failing the cron run.
 
 **If `supabase functions deploy` times out** (some sandboxed/CI environments
