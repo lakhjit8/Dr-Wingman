@@ -120,10 +120,25 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-your-key
 supabase functions deploy analyze-profile-photos
 supabase functions deploy analyze-match-profile
 supabase functions deploy coach-message
+supabase functions deploy check-budget-alerts
 ```
 
 `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are injected automatically
 into Edge Functions by Supabase — no need to set them manually.
+
+`check-budget-alerts` (the 15-min spending-alert cron job) needs a
+[Resend](https://resend.com) API key to send email:
+
+```bash
+supabase secrets set RESEND_API_KEY=re_your-key
+supabase secrets set ALERT_EMAIL_TO=ldvendingllc@gmail.com   # optional, this is the default
+```
+
+Without a verified sending domain in Resend, the default `ALERT_EMAIL_FROM`
+(`onboarding@resend.dev`) only works for sending to the address on the
+Resend account itself — verify a domain in the Resend dashboard if alerts
+need to go to a different address. If `RESEND_API_KEY` isn't set, the
+function logs and skips sending rather than failing the cron run.
 
 **If `supabase functions deploy` times out** (some sandboxed/CI environments
 can't complete the CLI's multi-asset upload): use
