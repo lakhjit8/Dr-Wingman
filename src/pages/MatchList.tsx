@@ -5,7 +5,7 @@ import { useScreenshotUpload } from '../hooks/useScreenshotUpload'
 import { UploadDropzone } from '../components/UploadDropzone'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { AnalysisLoadingState } from '../components/AnalysisLoadingState'
-import { truncateAtWord } from '../lib/text'
+import { PageHeader } from '../components/PageHeader'
 
 export function MatchList() {
   const {
@@ -41,20 +41,18 @@ export function MatchList() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-xl font-semibold text-neutral-900">Matches</h1>
-          <p className="mt-1 text-sm text-neutral-500">
-            Upload a match's profile to get a communication-style read and compatibility notes.
-          </p>
-        </div>
-        <button
-          onClick={() => setShowUpload((v) => !v)}
-          className="min-h-[44px] shrink-0 whitespace-nowrap self-start rounded-full bg-wingman-600 px-4 text-sm font-medium text-white hover:bg-wingman-700 sm:self-auto"
-        >
-          + New match
-        </button>
-      </div>
+      <PageHeader title="Matches" subtitle="Understand them before you reply" />
+
+      <button
+        onClick={() => setShowUpload((v) => !v)}
+        className="flex min-h-[44px] w-full items-center justify-between rounded-2xl bg-wingman-700 px-4 py-3.5 text-left hover:bg-wingman-800"
+      >
+        <span>
+          <span className="block font-display text-[14.5px] font-bold text-white">+ New match</span>
+          <span className="mt-0.5 block text-xs text-white/65">Upload a profile screenshot</span>
+        </span>
+        <span className="text-lg text-amber-500">↑</span>
+      </button>
 
       {showUpload && (
         <div className="space-y-3 rounded-2xl border border-neutral-200 bg-white p-5">
@@ -153,58 +151,47 @@ export function MatchList() {
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') navigate(`/matches/${m.id}`)
               }}
-              className="flex min-h-[44px] cursor-pointer items-start justify-between gap-3 rounded-2xl border border-neutral-200 bg-white p-4 text-left transition-colors hover:border-wingman-300 hover:shadow-sm"
+              className="flex min-h-[44px] cursor-pointer items-start gap-3 rounded-2xl border border-neutral-200 bg-white p-3.5 text-left transition-colors hover:border-wingman-300 hover:shadow-sm"
             >
+              <div className="h-11 w-11 shrink-0 rounded-xl bg-gradient-to-br from-wingman-300 to-wingman-700" />
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <h3 className="font-medium text-neutral-900">{m.match_label}</h3>
+                  <h3 className="font-display font-bold text-neutral-900">{m.match_label}</h3>
                   {m.style_summary && (
-                    <span className="rounded-full bg-neutral-100 px-2 py-0.5 font-mono text-[11px] text-neutral-500">
+                    <span className="rounded-full bg-wingman-100 px-2 py-0.5 font-mono text-[10.5px] text-wingman-700">
                       {m.style_summary.pace} pace
                     </span>
                   )}
                 </div>
                 {m.platform && <p className="mt-0.5 font-mono text-xs text-neutral-400">{m.platform}</p>}
                 {m.style_summary?.compatibility_notes && (
-                  <p className="mt-2 text-sm leading-relaxed text-neutral-600">
-                    {truncateAtWord(m.style_summary.compatibility_notes, 110)}
+                  <p className="mt-1.5 line-clamp-2 text-[12.5px] leading-relaxed text-neutral-600">
+                    {m.style_summary.compatibility_notes}
                   </p>
                 )}
               </div>
-              <div className="flex shrink-0 flex-col items-center gap-2">
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    void togglePin(m.id, !m.pinned)
-                  }}
-                  aria-label={m.pinned ? 'Unpin match' : 'Pin match to top'}
-                  aria-pressed={m.pinned}
-                  title={m.pinned ? 'Unpin' : 'Pin to top'}
-                  className={`flex h-8 w-8 items-center justify-center rounded-full ${
-                    m.pinned ? 'text-wingman-600' : 'text-neutral-300 hover:text-neutral-500'
-                  }`}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill={m.pinned ? 'currentColor' : 'none'} aria-hidden="true">
-                    <path
-                      d="M12 2l1.5 6.5L20 10l-6 4 1 7-3-3.5L9 21l1-7-6-4 6.5-1.5L12 2Z"
-                      stroke="currentColor"
-                      strokeWidth="1.4"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  className="shrink-0 text-neutral-300"
-                  aria-hidden="true"
-                >
-                  <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  void togglePin(m.id, !m.pinned)
+                }}
+                aria-label={m.pinned ? 'Unpin match' : 'Pin match to top'}
+                aria-pressed={m.pinned}
+                title={m.pinned ? 'Unpin' : 'Pin to top'}
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
+                  m.pinned ? 'text-amber-500' : 'text-neutral-300 hover:text-neutral-500'
+                }`}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill={m.pinned ? 'currentColor' : 'none'} aria-hidden="true">
+                  <path
+                    d="M12 2l1.5 6.5L20 10l-6 4 1 7-3-3.5L9 21l1-7-6-4 6.5-1.5L12 2Z"
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    strokeLinejoin="round"
+                  />
                 </svg>
-              </div>
+              </button>
             </div>
           ))}
         </div>
