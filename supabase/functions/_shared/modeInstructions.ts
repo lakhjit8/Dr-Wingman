@@ -40,13 +40,17 @@ export function matchAnalysisInstructions(platform?: string): string {
   ].join(' ')
 }
 
-export function messageCoachingInstructions(hasNewScreenshots: boolean, hasUserText: boolean): string {
+export function messageCoachingInstructions(
+  hasNewScreenshots: boolean,
+  hasUserText: boolean,
+  compaction?: { gapMessagesText: string }
+): string {
   const parts = ['Mode: message_coaching.']
   if (hasNewScreenshots) {
     parts.push(
       'The attached images are new screenshots of the ongoing conversation between the user and this match.',
-      'A screenshot of a scrolled chat naturally includes messages already covered by the',
-      '"Conversation and coaching history so far" above, not just brand-new ones — cross-reference against',
+      'A screenshot of a scrolled chat naturally includes messages already covered by the conversation',
+      'history above (summary and/or recent messages), not just brand-new ones — cross-reference against',
       'that history and include in parsed_messages ONLY messages that are not already present there',
       '(compare by sender + exact text). Do not re-list a message just because it\'s visible in the',
       'screenshot if it already appears in the history above. Parse the remaining new messages in',
@@ -65,7 +69,21 @@ export function messageCoachingInstructions(hasNewScreenshots: boolean, hasUserT
     'then LAYER 4 (Strategize) to draft 2-3 reply options per the LENGTH RULE, ENERGY MATCHING, and',
     'EMOJI STRATEGY sections. Apply LAYER 5 (Execute) and this match\'s PACING GUIDELINES tier',
     '(fast/medium/slow, from prior context if known) to the momentum_note — never achieve pacing by',
-    'misrepresenting the user or manipulating the match; the means is always authentic communication.',
+    'misrepresenting the user or manipulating the match; the means is always authentic communication.'
+  )
+  if (compaction) {
+    parts.push(
+      'Additionally, this conversation has grown long enough that older messages need to be folded into',
+      'a running summary so they don\'t need to be resent in full on every future turn. Here are the',
+      'older messages not yet reflected in the summary above:',
+      `"""${compaction.gapMessagesText}"""`,
+      'Produce an updated_summary field in your JSON: a concise (3-5 sentence) summary combining the',
+      'existing summary above (if any) with these older messages — key themes, dynamics, pacing, and any',
+      'logistics/commitments discussed — written so it can stand in for the raw messages in future',
+      'context. Per the SAFETY & PRIVACY REQUIREMENTS, never include the match\'s real name in the summary.'
+    )
+  }
+  parts.push(
     'End your reply with the message_coaching JSON block exactly as specified in the',
     'APP-SPECIFIC OUTPUT CONTRACT.'
   )
