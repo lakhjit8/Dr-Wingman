@@ -10,6 +10,7 @@ import { truncateAtWord } from '../lib/text'
 export function MatchList() {
   const {
     matches,
+    allMatches,
     loading,
     creating,
     error,
@@ -19,6 +20,8 @@ export function MatchList() {
     sortAscending,
     setSortAscending,
     togglePin,
+    searchQuery,
+    setSearchQuery,
   } = useMatches()
   const { upload, uploading } = useScreenshotUpload()
   const navigate = useNavigate()
@@ -74,35 +77,44 @@ export function MatchList() {
         </div>
       )}
 
-      {!loading && matches.length > 0 && (
-        <div className="flex items-center gap-2 text-sm">
-          <label htmlFor="match-sort" className="text-neutral-500">
-            Sort by
-          </label>
-          <select
-            id="match-sort"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-            className="min-h-[36px] rounded-full border border-neutral-300 bg-white px-3 text-sm text-neutral-700 focus:border-wingman-500 focus:outline-none"
-          >
-            <option value="last_message">Last active</option>
-            <option value="match_date">Matched date</option>
-          </select>
-          <button
-            type="button"
-            onClick={() => setSortAscending((v) => !v)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-300 text-neutral-500 hover:bg-neutral-100"
-            aria-label={sortAscending ? 'Sort descending' : 'Sort ascending'}
-            title={sortAscending ? 'Oldest first' : 'Newest first'}
-          >
-            {sortAscending ? '↑' : '↓'}
-          </button>
+      {!loading && allMatches.length > 0 && (
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <input
+            type="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search matches…"
+            className="min-h-[36px] w-full rounded-full border border-neutral-300 bg-white px-4 text-sm text-neutral-700 focus:border-wingman-500 focus:outline-none sm:max-w-xs"
+          />
+          <div className="flex items-center gap-2 text-sm">
+            <label htmlFor="match-sort" className="text-neutral-500">
+              Sort by
+            </label>
+            <select
+              id="match-sort"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+              className="min-h-[36px] rounded-full border border-neutral-300 bg-white px-3 text-sm text-neutral-700 focus:border-wingman-500 focus:outline-none"
+            >
+              <option value="last_message">Last active</option>
+              <option value="match_date">Matched date</option>
+            </select>
+            <button
+              type="button"
+              onClick={() => setSortAscending((v) => !v)}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-300 text-neutral-500 hover:bg-neutral-100"
+              aria-label={sortAscending ? 'Sort descending' : 'Sort ascending'}
+              title={sortAscending ? 'Oldest first' : 'Newest first'}
+            >
+              {sortAscending ? '↑' : '↓'}
+            </button>
+          </div>
         </div>
       )}
 
       {loading ? (
         <LoadingSpinner />
-      ) : matches.length === 0 ? (
+      ) : allMatches.length === 0 ? (
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-neutral-300 bg-white px-6 py-12 text-center">
           <span className="flex h-12 w-12 items-center justify-center rounded-full bg-wingman-50 text-wingman-600">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -126,6 +138,10 @@ export function MatchList() {
             Upload your first match
           </button>
         </div>
+      ) : matches.length === 0 ? (
+        <p className="rounded-2xl border border-dashed border-neutral-300 bg-white px-6 py-10 text-center text-sm text-neutral-500">
+          No matches found for "{searchQuery}".
+        </p>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2">
           {matches.map((m) => (

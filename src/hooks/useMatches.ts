@@ -18,6 +18,7 @@ export function useMatches() {
   const [error, setError] = useState<string | null>(null)
   const [sortBy, setSortBy] = useState<MatchSort>('last_message')
   const [sortAscending, setSortAscending] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const reload = useCallback(async () => {
     if (!user) return
@@ -36,6 +37,15 @@ export function useMatches() {
   useEffect(() => {
     void reload()
   }, [reload])
+
+  const normalizedQuery = searchQuery.trim().toLowerCase()
+  const visibleMatches = normalizedQuery
+    ? matches.filter(
+        (m) =>
+          m.match_label.toLowerCase().includes(normalizedQuery) ||
+          m.style_summary?.compatibility_notes?.toLowerCase().includes(normalizedQuery)
+      )
+    : matches
 
   const togglePin = async (matchId: string, pinned: boolean) => {
     const { error: pinError } = await supabase.from('matches').update({ pinned }).eq('id', matchId)
@@ -66,7 +76,8 @@ export function useMatches() {
   }
 
   return {
-    matches,
+    matches: visibleMatches,
+    allMatches: matches,
     loading,
     creating,
     error,
@@ -77,5 +88,7 @@ export function useMatches() {
     sortAscending,
     setSortAscending,
     togglePin,
+    searchQuery,
+    setSearchQuery,
   }
 }
