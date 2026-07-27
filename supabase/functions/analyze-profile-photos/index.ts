@@ -26,6 +26,7 @@ Deno.serve(async (req) => {
     const body = await req.json()
     paths = Array.isArray(body.paths) ? body.paths : []
     const interviewNotes: string | undefined = body.interviewNotes
+    const existingBio: string | undefined = body.existingBio
 
     if (!paths.length) {
       return new Response(JSON.stringify({ error: 'No photos provided' }), {
@@ -49,7 +50,7 @@ Deno.serve(async (req) => {
     }
 
     const { json, stopReason } = await callDrWingman({
-      modeInstructions: profileBuilderInstructions(interviewNotes),
+      modeInstructions: profileBuilderInstructions(interviewNotes, existingBio),
       images,
     })
 
@@ -62,7 +63,7 @@ Deno.serve(async (req) => {
       .upsert(
         {
           id: user.id,
-          bio_draft: json.bio_draft ?? null,
+          bio_draft: (json.bio_draft as string | null | undefined) ?? existingBio ?? null,
           prompts: json.prompt_suggestions ?? [],
           photo_analysis: json,
           communication_style: json.communication_style ?? null,

@@ -20,8 +20,9 @@ export interface ProfileAnalysis {
   communication_style: CommunicationStyle
   strengths: string[]
   gaps: string[]
-  bio_draft: string
-  prompt_suggestions: PromptSuggestion[]
+  /** Null when the user supplied an existing bio to keep — no new draft was generated. */
+  bio_draft: string | null
+  prompt_suggestions: PromptSuggestion[] | null
   photo_order: string[]
   photo_requests: PhotoRequest[]
 }
@@ -49,6 +50,8 @@ export interface MatchStyleSummary {
   yellow_flags: string[]
   red_flags: string[]
   opening_messages: string[]
+  /** Recurring theme observed across the user's other saved matches; null when fewer than 2 exist or none stands out. */
+  cross_match_patterns?: string | null
 }
 
 export interface Match {

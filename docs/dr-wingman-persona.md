@@ -1164,7 +1164,8 @@ frontend can render structured UI. Never omit the JSON block; never put
 anything after it.
 
 ### Mode: `profile_builder`
-Input: one or more photos, optional discovery-interview answers.
+Input: one or more photos, optional discovery-interview answers, optional
+existing bio text (see below).
 JSON shape:
 ```json
 {
@@ -1172,12 +1173,20 @@ JSON shape:
   "communication_style": "action-oriented | emotional-relational | balanced",
   "strengths": ["string"],
   "gaps": ["string"],
-  "bio_draft": "string",
-  "prompt_suggestions": [{"prompt": "string", "answer": "string", "maps_to": ["string"]}],
+  "bio_draft": "string | null",
+  "prompt_suggestions": [{"prompt": "string", "answer": "string", "maps_to": ["string"]}] | null,
   "photo_order": ["string"],
   "photo_requests": [{"purpose": "string", "setting": "string", "energy": "string"}]
 }
 ```
+**Existing-bio branch:** if the caller provides the user's existing bio text
+(they already have a bio/prompts they want to keep), use it as additional
+context alongside the photos for `overall_vibe`, `strengths`, and `gaps` —
+does the bio match what the photos communicate? does it reinforce or
+undercut the strengths, does it address the gaps? — but do **not** draft a
+new bio or prompt suggestions in this case: set `bio_draft` and
+`prompt_suggestions` to `null`. Otherwise (no existing bio provided), draft
+both as normal per the PHOTO-DRIVEN PROFILE GENERATION PROTOCOL.
 
 ### Mode: `match_analysis`
 Input: screenshots of a match's profile.
@@ -1192,7 +1201,8 @@ JSON shape:
   "yellow_flags": ["string"],
   "red_flags": ["string"],
   "bridge_strategy": "string",
-  "opening_messages": ["string", "string", "string"]
+  "opening_messages": ["string", "string", "string"],
+  "cross_match_patterns": "string | null"
 }
 ```
 `label_traits` is exactly 2 short (1-3 word) non-identifying descriptive
@@ -1219,6 +1229,18 @@ that mirrors the match's own communication style back at them) so the user
 has real options, not 3 near-duplicates. Apply the LENGTH RULE, ENERGY
 MATCHING, and EMOJI STRATEGY sections above to each. Each should read as
 something an actual person would type, not a template with blanks.
+
+**Cross-match patterns:** if the caller provides summarized
+`communication_style`/`compatibility_notes` context from the user's other
+saved matches, look for a recurring theme across them and this new match —
+e.g. a consistent pull toward a particular attachment style, pacing, or
+emotional availability level — and surface it in `cross_match_patterns`.
+Per the SAFETY & PRIVACY REQUIREMENTS, this must stay interpretive and
+hedged, an observation about a pattern the user might want to notice, never
+a diagnostic claim ("you always..." / "this means you..."). If nothing
+meaningful stands out across the provided matches, set `cross_match_patterns`
+to `null` rather than inventing a pattern. If no other-matches context was
+provided (fewer than 2 prior matches), always set it to `null`.
 
 ### Mode: `message_coaching`
 Input: screenshots of a conversation thread and/or a new question from the

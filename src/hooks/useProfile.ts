@@ -27,14 +27,14 @@ export function useProfile() {
     void reload()
   }, [reload])
 
-  const analyzePhotos = async (paths: string[], interviewNotes?: string) => {
+  const analyzePhotos = async (paths: string[], interviewNotes?: string, existingBio?: string) => {
     setAnalyzing(true)
     setError(null)
     try {
       const { data, error: fnError } = await supabase.functions.invoke<{
         analysis: ProfileAnalysis
       }>('analyze-profile-photos', {
-        body: { paths, interviewNotes },
+        body: { paths, interviewNotes, existingBio },
         timeout: 60_000,
       })
       if (fnError) throw fnError

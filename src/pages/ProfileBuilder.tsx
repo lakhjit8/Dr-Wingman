@@ -1,19 +1,24 @@
+import { useState } from 'react'
 import { useProfile } from '../hooks/useProfile'
 import { useScreenshotUpload } from '../hooks/useScreenshotUpload'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { AnalysisLoadingState } from '../components/AnalysisLoadingState'
 import { Composer } from '../components/Composer'
 
+type BioChoice = 'ask' | 'new' | 'existing'
+
 export function ProfileBuilder() {
   const { profile, loading, analyzing, error, analyzePhotos } = useProfile()
   const { upload, uploading } = useScreenshotUpload()
+  const [bioChoice, setBioChoice] = useState<BioChoice>('ask')
+  const [existingBioText, setExistingBioText] = useState('')
 
   const busy = uploading || analyzing
 
   const handleAnalyze = async ({ files, text }: { files: File[]; text: string }) => {
     if (!files.length) return
     const paths = await upload(files)
-    await analyzePhotos(paths, text || undefined)
+    await analyzePhotos(paths, text || undefined, bioChoice === 'existing' ? existingBioText.trim() : undefined)
   }
 
   if (loading) return <LoadingSpinner />
@@ -30,15 +35,60 @@ export function ProfileBuilder() {
         </p>
       </div>
 
-      {!analysis && (
+      {!analysis && bioChoice === 'ask' && (
+        <div className="space-y-3 rounded-2xl border border-neutral-200 bg-white p-5">
+          <p className="text-sm font-medium text-neutral-800">
+            Do you already have a bio and prompts you'd like to keep, or would you like Dr. Wingman
+            to draft new ones?
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setBioChoice('existing')}
+              className="min-h-[44px] rounded-full border border-neutral-300 px-4 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
+            >
+              I have an existing bio
+            </button>
+            <button
+              type="button"
+              onClick={() => setBioChoice('new')}
+              className="min-h-[44px] rounded-full bg-wingman-600 px-4 text-sm font-medium text-white hover:bg-wingman-700"
+            >
+              Draft one for me
+            </button>
+          </div>
+        </div>
+      )}
+
+      {!analysis && bioChoice === 'existing' && (
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-neutral-700">Paste your existing bio</label>
+          <textarea
+            value={existingBioText}
+            onChange={(e) => setExistingBioText(e.target.value)}
+            rows={4}
+            placeholder="Paste your current bio and prompt answers here…"
+            className="w-full rounded-xl border border-neutral-300 p-3 text-sm focus:border-wingman-500 focus:outline-none"
+          />
+        </div>
+      )}
+
+      {!analysis && (bioChoice === 'new' || bioChoice === 'existing') && (
         <Composer
-          placeholder="Anything you want Dr. Wingman to know? (optional) e.g. I'm looking for something serious…"
+          placeholder={
+            bioChoice === 'existing'
+              ? 'Anything else you want Dr. Wingman to know? (optional)'
+              : "Anything you want Dr. Wingman to know? (optional) e.g. I'm looking for something serious…"
+          }
           attachLabel="Upload your photos"
-          sendLabel="Analyze photos & build profile"
+          sendLabel={bioChoice === 'existing' ? 'Analyze photos' : 'Analyze photos & build profile'}
           busyLabel="Analyzing…"
-          disabled={busy}
+          disabled={busy || (bioChoice === 'existing' && !existingBioText.trim())}
           onSubmit={handleAnalyze}
         />
+      )}
+      {!analysis && bioChoice === 'existing' && !existingBioText.trim() && (
+        <p className="-mt-4 text-xs text-neutral-400">Paste your bio above to enable this.</p>
       )}
 
       {!analysis && busy && <AnalysisLoadingState />}
@@ -79,28 +129,32 @@ export function ProfileBuilder() {
             </div>
           </div>
 
-          <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-              Bio draft
-            </h3>
-            <p className="mt-1 whitespace-pre-wrap rounded-xl bg-neutral-50 p-3 text-sm text-neutral-800">
-              {analysis.bio_draft}
-            </p>
-          </div>
-
-          <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-              Prompt suggestions
-            </h3>
-            <div className="mt-2 space-y-2">
-              {analysis.prompt_suggestions.map((p, i) => (
-                <div key={i} className="rounded-xl bg-neutral-50 p-3">
-                  <p className="text-xs font-semibold text-neutral-500">{p.prompt}</p>
-                  <p className="mt-1 text-sm text-neutral-800">{p.answer}</p>
-                </div>
-              ))}
+          {analysis.bio_draft && (
+            <div>
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                Bio draft
+              </h3>
+              <p className="mt-1 whitespace-pre-wrap rounded-xl bg-neutral-50 p-3 text-sm text-neutral-800">
+                {analysis.bio_draft}
+              </p>
             </div>
-          </div>
+          )}
+
+          {analysis.prompt_suggestions && analysis.prompt_suggestions.length > 0 && (
+            <div>
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                Prompt suggestions
+              </h3>
+              <div className="mt-2 space-y-2">
+                {analysis.prompt_suggestions.map((p, i) => (
+                  <div key={i} className="rounded-xl bg-neutral-50 p-3">
+                    <p className="text-xs font-semibold text-neutral-500">{p.prompt}</p>
+                    <p className="mt-1 text-sm text-neutral-800">{p.answer}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {analysis.photo_requests.length > 0 && (
             <div>
