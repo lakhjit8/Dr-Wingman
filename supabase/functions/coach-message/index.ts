@@ -92,6 +92,8 @@ Deno.serve(async (req) => {
       modeInstructions: `${contextPrefix}\n\n${messageCoachingInstructions(paths.length > 0, Boolean(userText))}`,
       images,
       userText,
+      userId: user.id,
+      feature: 'message_coaching',
     })
 
     if (!json) {

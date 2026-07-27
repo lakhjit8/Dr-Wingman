@@ -53,6 +53,8 @@ Deno.serve(async (req) => {
     const { json, stopReason } = await callDrWingman({
       modeInstructions: matchAnalysisInstructions(platform, otherMatchesContext),
       images,
+      userId: user.id,
+      feature: 'match_analysis',
     })
 
     if (!json) {

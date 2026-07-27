@@ -52,6 +52,8 @@ Deno.serve(async (req) => {
     const { json, stopReason } = await callDrWingman({
       modeInstructions: profileBuilderInstructions(interviewNotes, existingBio),
       images,
+      userId: user.id,
+      feature: 'profile_builder',
     })
 
     if (!json) {
