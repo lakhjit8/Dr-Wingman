@@ -192,8 +192,8 @@ export function Terms() {
 
         <p className="border-t border-neutral-200 pt-4 text-xs text-neutral-400">
           Questions about these Terms? Contact{' '}
-          <a href="mailto:lakhjitsingh8@gmail.com" className="underline">
-            lakhjitsingh8@gmail.com
+          <a href="mailto:ldvendingllc@gmail.com" className="underline">
+            ldvendingllc@gmail.com
           </a>
           .
         </p>
