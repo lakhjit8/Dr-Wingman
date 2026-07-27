@@ -73,8 +73,8 @@ export function Privacy() {
           <p>
             Depending on your location (e.g., California under CCPA, EU under GDPR), you may have
             the right to access, delete, or export your data. Contact{' '}
-            <a href="mailto:lakhjitsingh8@gmail.com" className="underline">
-              lakhjitsingh8@gmail.com
+            <a href="mailto:ldvendingllc@gmail.com" className="underline">
+              ldvendingllc@gmail.com
             </a>{' '}
             to exercise these rights.
           </p>
@@ -102,8 +102,8 @@ export function Privacy() {
           <h2 className="text-base font-semibold text-neutral-900">Contact</h2>
           <p>
             Questions about these Terms or this Privacy Policy:{' '}
-            <a href="mailto:lakhjitsingh8@gmail.com" className="underline">
-              lakhjitsingh8@gmail.com
+            <a href="mailto:ldvendingllc@gmail.com" className="underline">
+              ldvendingllc@gmail.com
             </a>
             , or by mail at {LLC_LEGAL_NAME}'s registered address on file with the California
             Secretary of State.
