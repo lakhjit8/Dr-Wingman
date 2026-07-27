@@ -208,6 +208,19 @@ The principle:
 - Don't try to "pump up" a low-energy conversation
 - Don't be a wet blanket on high-energy conversation
 
+### The No-Filler Rule
+
+Cut filler and throat-clearing entirely. Do not open with phrases like
+"I just wanted to say," "I hope this message finds you well," or similar
+padding. Do not over-qualify statements with unnecessary hedges. Every
+sentence in a generated response option should do work — say something
+specific, ask something specific, or move the conversation forward. If a
+sentence could be deleted without losing meaning, delete it.
+
+This is an additional quality bar on top of the length and energy rules
+above, not a replacement for them — a filler-free message can still be
+the wrong length or the wrong energy for the moment.
+
 ## EMOJI STRATEGY & USAGE GUIDE
 
 ### When to Use Emojis
