@@ -3,44 +3,48 @@ import { LLC_LEGAL_NAME, EFFECTIVE_DATE } from '../lib/legal'
 
 export function Terms() {
   return (
-    <div className="mx-auto max-w-2xl px-4 py-10">
-      <Link to="/login" className="text-sm text-wingman-700 hover:underline">
-        ← Back
-      </Link>
-      <h1 className="mt-4 text-2xl font-semibold text-neutral-900">Terms of Service</h1>
-      <p className="mt-2 text-sm text-neutral-500">
-        Effective Date: {EFFECTIVE_DATE}
-        <br />
-        Operated by: {LLC_LEGAL_NAME}, a California limited liability company
-      </p>
-      <p className="mt-2 text-sm italic text-neutral-500">
-        Founder-assembled draft — not final legal advice. Pending attorney review before this goes
-        live publicly.
-      </p>
+    <div className="min-h-screen bg-neutral-50">
+      <div className="bg-wingman-900 px-4 pb-6 pt-10 sm:px-6">
+        <div className="mx-auto max-w-2xl">
+          <Link to="/login" className="text-sm text-white hover:underline">
+            ← Back
+          </Link>
+          <h1 className="mt-3 font-display text-2xl font-bold text-white">Terms of Service</h1>
+          <p className="mt-2 text-sm text-white/55">
+            Effective Date: {EFFECTIVE_DATE}
+            <br />
+            Operated by: {LLC_LEGAL_NAME}, a California limited liability company
+          </p>
+          <p className="mt-2 text-sm italic text-white/35">
+            Founder-assembled draft — not final legal advice. Pending attorney review before this
+            goes live publicly.
+          </p>
+        </div>
+      </div>
 
-      <div className="prose-sm mt-6 space-y-5 text-sm leading-relaxed text-neutral-700">
-        <section>
+      <div className="mx-auto max-w-2xl space-y-4 px-4 py-8 sm:px-6">
+        <section className="rounded-2xl border border-neutral-200 bg-white p-5">
           <h2 className="text-base font-semibold text-neutral-900">1. Acceptance of Terms</h2>
-          <p>
+          <p className="mt-1 text-sm leading-relaxed text-neutral-700">
             By creating an account or using Dr. Wingman, you agree to these Terms and the
             accompanying Privacy Policy. If you do not agree, do not use the app.
           </p>
         </section>
 
-        <section>
+        <section className="rounded-2xl border border-neutral-200 bg-white p-5">
           <h2 className="text-base font-semibold text-neutral-900">2. Eligibility</h2>
-          <p>
+          <p className="mt-1 text-sm leading-relaxed text-neutral-700">
             You must be at least 18 years old to use this app. By using it, you represent that you
             are 18 or older and that any individual whose photo or profile information you upload
             is also 18 or older to your knowledge.
           </p>
         </section>
 
-        <section>
+        <section className="rounded-2xl border border-neutral-200 bg-white p-5">
           <h2 className="text-base font-semibold text-neutral-900">
             3. Your Responsibility Regarding Third-Party Platforms
           </h2>
-          <p>
+          <p className="mt-1 text-sm leading-relaxed text-neutral-700">
             Dr. Wingman is a communication-coaching tool and is not affiliated with, endorsed by,
             or operated by Tinder, Hinge, Bumble, or any other dating platform. You are solely
             responsible for ensuring your use of this app, including uploading screenshots from
@@ -50,13 +54,13 @@ export function Terms() {
           </p>
         </section>
 
-        <section>
+        <section className="rounded-2xl border border-neutral-200 bg-white p-5">
           <h2 className="text-base font-semibold text-neutral-900">4. User Content and Representations</h2>
-          <p>
+          <p className="mt-1 text-sm leading-relaxed text-neutral-700">
             When you upload a photo, screenshot, or profile information — whether your own or
             belonging to another person (a "match") — you represent and warrant that:
           </p>
-          <ul className="list-inside list-disc space-y-1">
+          <ul className="mt-1 list-inside list-disc space-y-1 text-sm leading-relaxed text-neutral-700">
             <li>You have the right to share that content with us;</li>
             <li>You will not upload content depicting anyone under 18;</li>
             <li>You are not using the app to harass, stalk, impersonate, or deceive another person;</li>
@@ -70,7 +74,7 @@ export function Terms() {
               interpretation, not a factual or professional assessment of that person.
             </li>
           </ul>
-          <p className="mt-2">
+          <p className="mt-2 text-sm leading-relaxed text-neutral-700">
             <strong>Indemnification.</strong> You agree to indemnify and hold {LLC_LEGAL_NAME}{' '}
             harmless from any claim, damage, or legal proceeding arising from content you upload,
             including claims brought by a third party (such as a match) whose likeness or
@@ -78,9 +82,9 @@ export function Terms() {
           </p>
         </section>
 
-        <section>
+        <section className="rounded-2xl border border-neutral-200 bg-white p-5">
           <h2 className="text-base font-semibold text-neutral-900">5. How We Handle Photos and Match Data</h2>
-          <ul className="list-inside list-disc space-y-1">
+          <ul className="mt-1 list-inside list-disc space-y-1 text-sm leading-relaxed text-neutral-700">
             <li>
               We do not require or collect a selfie, government ID, or any biometric verification
               to create an account.
@@ -117,11 +121,11 @@ export function Terms() {
           </ul>
         </section>
 
-        <section>
+        <section className="rounded-2xl border border-neutral-200 bg-white p-5">
           <h2 className="text-base font-semibold text-neutral-900">
             6. Nature of the Service — Not Professional Advice
           </h2>
-          <p>
+          <p className="mt-1 text-sm leading-relaxed text-neutral-700">
             Dr. Wingman provides AI-generated coaching and analysis for entertainment and
             self-improvement purposes. It is <strong>not</strong> psychological, psychiatric,
             therapeutic, or counseling services. AI-generated analysis of a profile or photo is an
@@ -132,9 +136,9 @@ export function Terms() {
           </p>
         </section>
 
-        <section>
+        <section className="rounded-2xl border border-neutral-200 bg-white p-5">
           <h2 className="text-base font-semibold text-neutral-900">7. Your Safety</h2>
-          <p>
+          <p className="mt-1 text-sm leading-relaxed text-neutral-700">
             Dr. Wingman may suggest strategies for arranging in-person meetings with people you
             have not met. <strong>Always meet new people in public places, tell a friend or family
             member your plans, arrange your own transportation, and trust your instincts if
@@ -143,18 +147,18 @@ export function Terms() {
           </p>
         </section>
 
-        <section>
+        <section className="rounded-2xl border border-neutral-200 bg-white p-5">
           <h2 className="text-base font-semibold text-neutral-900">8. No Guarantee of Outcomes</h2>
-          <p>
+          <p className="mt-1 text-sm leading-relaxed text-neutral-700">
             Dr. Wingman does not guarantee any match, response, date, or relationship outcome.
             Coaching suggestions, including any pacing guidance, are general in nature and are not
             a promise of results.
           </p>
         </section>
 
-        <section>
+        <section className="rounded-2xl border border-neutral-200 bg-white p-5">
           <h2 className="text-base font-semibold text-neutral-900">9. Limitation of Liability</h2>
-          <p>
+          <p className="mt-1 text-sm leading-relaxed text-neutral-700">
             To the maximum extent permitted by law, {LLC_LEGAL_NAME} and its members and operators
             are not liable for indirect, incidental, or consequential damages arising from your
             use of the app, including damages arising from your interactions with other
@@ -162,18 +166,18 @@ export function Terms() {
           </p>
         </section>
 
-        <section>
+        <section className="rounded-2xl border border-neutral-200 bg-white p-5">
           <h2 className="text-base font-semibold text-neutral-900">10. Termination</h2>
-          <p>
+          <p className="mt-1 text-sm leading-relaxed text-neutral-700">
             We may suspend or terminate your account for violation of these Terms, including
             uploading content depicting a minor, harassment, or misuse of the app to deceive or
             harm another person.
           </p>
         </section>
 
-        <section>
+        <section className="rounded-2xl border border-neutral-200 bg-white p-5">
           <h2 className="text-base font-semibold text-neutral-900">11. Governing Law & Disputes</h2>
-          <p>
+          <p className="mt-1 text-sm leading-relaxed text-neutral-700">
             These Terms are governed by the laws of the State of California, without regard to
             conflict-of-law principles. Any dispute arising from these Terms or your use of the
             app shall be resolved in the state or federal courts located in San Joaquin County,
@@ -181,9 +185,9 @@ export function Terms() {
           </p>
         </section>
 
-        <section>
+        <section className="rounded-2xl border border-neutral-200 bg-white p-5">
           <h2 className="text-base font-semibold text-neutral-900">12. Changes to These Terms</h2>
-          <p>
+          <p className="mt-1 text-sm leading-relaxed text-neutral-700">
             We may update these Terms from time to time. Material changes will require
             re-acceptance on next login; continued use after non-material changes constitutes
             acceptance.
