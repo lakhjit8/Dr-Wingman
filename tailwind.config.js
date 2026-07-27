@@ -79,6 +79,10 @@ export default {
       fontFamily: {
         sans: ['"Public Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        // Display face for headings/wordmark/section labels — layered over
+        // the Public Sans body, per the redesign brief. Bold weights only
+        // (600/700), never used for body copy.
+        display: ['"Space Grotesk"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
     },
   },

@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { WingMark } from './WingMark'
 
 const navItems = [
   { to: '/matches', label: 'Matches', icon: MatchesIcon },
@@ -14,7 +15,10 @@ export function Layout() {
     <div className="min-h-screen bg-neutral-50 pb-20 sm:pb-0">
       <header className="sticky top-0 z-10 border-b border-neutral-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3">
-          <NavLink to="/matches" className="flex items-center gap-2 font-semibold text-wingman-700">
+          <NavLink to="/matches" className="flex items-center gap-2 font-display font-bold text-wingman-700">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-wingman-600 p-1">
+              <WingMark size={18} />
+            </span>
             <span className="text-lg">Dr. Wingman</span>
           </NavLink>
           <nav className="hidden items-center gap-4 text-sm sm:flex">

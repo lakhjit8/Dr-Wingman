@@ -2,6 +2,7 @@ import type { MatchMessage } from '../lib/types'
 import { Collapsible } from './Collapsible'
 import { FlagList } from './FlagIcon'
 import { CopyButton } from './CopyButton'
+import { WingMark } from './WingMark'
 
 interface MatchAnalysisMetadata {
   [key: string]: unknown
@@ -37,8 +38,8 @@ function formatTime(iso: string): string {
 
 function CoachAvatar() {
   return (
-    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-wingman-600 text-xs font-semibold text-white">
-      DW
+    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-wingman-600 p-1.5">
+      <WingMark size={16} />
     </span>
   )
 }
@@ -47,7 +48,7 @@ function CoachHeader({ createdAt }: { createdAt: string }) {
   return (
     <div className="mb-2 flex items-center gap-2">
       <CoachAvatar />
-      <span className="text-xs font-semibold uppercase tracking-wide text-wingman-700">Dr. Wingman</span>
+      <span className="font-display text-xs font-bold uppercase tracking-wide text-wingman-700">Dr. Wingman</span>
       <span className="font-mono text-[11px] text-neutral-400">{formatTime(createdAt)}</span>
     </div>
   )
