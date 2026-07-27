@@ -38,7 +38,11 @@ export function Composer({ placeholder, attachLabel, sendLabel, busyLabel, disab
         type="button"
         onClick={() => setShowAttach((v) => !v)}
         disabled={disabled}
-        className="flex min-h-[36px] items-center gap-1.5 rounded-full border border-neutral-300 px-3 text-xs font-medium text-neutral-600 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
+        className={`flex min-h-[36px] items-center gap-1.5 rounded-full border px-3 text-xs font-medium disabled:cursor-not-allowed disabled:opacity-50 ${
+          pendingFiles.length
+            ? 'border-wingman-500 bg-wingman-50 text-wingman-700'
+            : 'border-neutral-300 text-neutral-600 hover:bg-neutral-100'
+        }`}
       >
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
@@ -70,6 +74,12 @@ export function Composer({ placeholder, attachLabel, sendLabel, busyLabel, disab
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault()
+              void handleSubmit()
+            }
+          }}
           placeholder={placeholder}
           rows={1}
           disabled={disabled}

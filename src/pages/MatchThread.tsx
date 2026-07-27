@@ -28,18 +28,18 @@ export function MatchThread() {
   return (
     <div className="flex h-[calc(100vh-12.5rem)] flex-col sm:h-[calc(100vh-8rem)]">
       {profile && <SafetyNotice alreadyShown={Boolean(profile.safety_notice_shown_at)} />}
-      <div className="mb-3 flex items-center gap-3 border-b border-neutral-200 pb-3">
+      <div className="-mx-4 -mt-6 mb-3 flex items-center gap-3 bg-wingman-900 px-4 py-6 sm:-mx-0 sm:mt-0 sm:rounded-2xl sm:px-6">
         <Link
           to="/matches"
-          className="flex h-11 w-11 items-center justify-center rounded-full text-neutral-500 hover:bg-neutral-100"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white hover:bg-white/10"
           aria-label="Back to matches"
         >
           ←
         </Link>
         <div>
-          <h1 className="text-lg font-semibold text-neutral-900">{match?.match_label ?? 'Match'}</h1>
+          <h1 className="font-display text-[17px] font-bold text-white">{match?.match_label ?? 'Match'}</h1>
           {match?.style_summary && (
-            <span className="mt-0.5 inline-block rounded-full bg-wingman-100 px-2.5 py-0.5 text-xs font-medium text-wingman-700">
+            <span className="mt-0.5 inline-block rounded-full bg-amber-500 px-2.5 py-0.5 font-mono text-[10.5px] font-medium text-wingman-900">
               {match.style_summary.pace} pace
             </span>
           )}
