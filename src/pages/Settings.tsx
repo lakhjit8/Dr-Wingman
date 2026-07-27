@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useProfile } from '../hooks/useProfile'
 import { MONETIZATION_MODE } from '../lib/featureFlags'
 import { SAFETY_NOTICE_TEXT } from '../components/SafetyNotice'
 
 export function Settings() {
   const { user, signOut } = useAuth()
+  const { profile } = useProfile()
 
   return (
     <div className="max-w-lg space-y-6">
@@ -44,6 +46,15 @@ export function Settings() {
           </Link>
         </div>
       </div>
+
+      {profile?.is_admin && (
+        <div className="rounded-2xl border border-neutral-200 bg-white p-5">
+          <h2 className="text-sm font-semibold text-neutral-700">Admin</h2>
+          <Link to="/admin" className="mt-2 inline-block text-sm text-wingman-700 underline">
+            Usage & spending dashboard
+          </Link>
+        </div>
+      )}
 
       <div className="rounded-2xl border border-neutral-200 bg-white p-5">
         <h2 className="text-sm font-semibold text-neutral-700">Meeting someone new? A few reminders:</h2>

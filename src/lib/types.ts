@@ -37,6 +37,7 @@ export interface UserProfile {
   terms_accepted_at: string | null
   terms_version: string | null
   safety_notice_shown_at: string | null
+  is_admin: boolean
   created_at: string
   updated_at: string
 }
