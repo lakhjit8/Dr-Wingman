@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
 
-const STAGES = ['Reading the profile…', 'Analyzing communication style…', 'Drafting your next move…']
+const STAGES = [
+  'Reading the profile…',
+  'Analyzing communication style…',
+  'Drafting your next move…',
+  'Still working — great reads take a little longer…',
+]
 
 /** Staged loading text so the multi-second AI analysis wait feels purposeful, not stalled. */
 export function AnalysisLoadingState() {

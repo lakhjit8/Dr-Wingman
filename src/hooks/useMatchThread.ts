@@ -56,11 +56,18 @@ export function useMatchThread(matchId: string | undefined) {
     try {
       const { error: fnError } = await supabase.functions.invoke('coach-message', {
         body: { matchId, paths: opts.paths, userText: opts.userText },
+        timeout: 60_000,
       })
       if (fnError) throw fnError
       await reload()
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to get coaching response')
+      setError(
+        e instanceof Error
+          ? /aborted|timeout/i.test(e.message)
+            ? 'Dr. Wingman is taking longer than expected — please try again.'
+            : e.message
+          : 'Failed to get coaching response'
+      )
     } finally {
       setCoaching(false)
     }

@@ -33,7 +33,7 @@ export function useMatches() {
     try {
       const { data, error: fnError } = await supabase.functions.invoke<{ matchId: string }>(
         'analyze-match-profile',
-        { body: { paths, platform } }
+        { body: { paths, platform }, timeout: 60_000 }
       )
       if (fnError) throw fnError
       await reload()

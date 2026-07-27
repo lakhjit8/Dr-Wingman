@@ -35,6 +35,7 @@ export function useProfile() {
         analysis: ProfileAnalysis
       }>('analyze-profile-photos', {
         body: { paths, interviewNotes },
+        timeout: 60_000,
       })
       if (fnError) throw fnError
       await reload()
