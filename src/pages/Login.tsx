@@ -1,6 +1,7 @@
 import { FormEvent, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { WingMark } from '../components/WingMark'
 
 export function Login() {
   const { user, signInWithEmail, signInWithOAuth } = useAuth()
@@ -26,14 +27,17 @@ export function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-neutral-50 px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-neutral-200 bg-white p-8 shadow-sm">
-        <h1 className="text-center text-2xl font-semibold text-wingman-700">Dr. Wingman</h1>
-        <p className="mt-1 text-center text-sm text-neutral-500">
-          Your AI dating communication coach.
-        </p>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-wingman-900 px-6">
+      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-wingman-600">
+        <WingMark size={44} />
+      </div>
+      <h1 className="font-display text-2xl font-bold text-white">Dr. Wingman</h1>
+      <p className="mb-6 mt-1 text-center text-sm text-white/60">
+        Your AI dating communication coach.
+      </p>
 
-        <label className="mt-6 flex items-start gap-2 text-xs text-neutral-600">
+      <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-sm">
+        <label className="flex items-start gap-2 text-xs text-neutral-600">
           <input
             type="checkbox"
             checked={agreed}
@@ -100,11 +104,11 @@ export function Login() {
             {error && <p className="text-center text-sm text-danger-700">{error}</p>}
           </form>
         )}
-
-        <p className="mt-6 text-center text-xs text-neutral-400">
-          You are responsible for how you use generated content on third-party dating platforms.
-        </p>
       </div>
+
+      <p className="mt-6 max-w-xs text-center text-xs text-white/35">
+        You are responsible for how you use generated content on third-party dating platforms.
+      </p>
     </div>
   )
 }
