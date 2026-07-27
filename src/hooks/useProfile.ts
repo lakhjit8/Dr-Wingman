@@ -28,6 +28,22 @@ export function useProfile() {
     void reload()
   }, [reload])
 
+  const resetProfile = async (): Promise<{ error: string | null }> => {
+    if (!user) return { error: 'Not signed in' }
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({
+        bio_draft: null,
+        prompts: [],
+        photo_analysis: null,
+        communication_style: null,
+      })
+      .eq('id', user.id)
+    if (updateError) return { error: updateError.message }
+    await reload()
+    return { error: null }
+  }
+
   const analyzePhotos = async (paths: string[], interviewNotes?: string, existingBio?: string) => {
     setAnalyzing(true)
     setError(null)
@@ -49,5 +65,5 @@ export function useProfile() {
     }
   }
 
-  return { profile, loading, analyzing, error, analyzePhotos, reload }
+  return { profile, loading, analyzing, error, analyzePhotos, resetProfile, reload }
 }

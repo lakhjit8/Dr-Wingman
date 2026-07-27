@@ -12,13 +12,16 @@ const MIN_PHOTOS = 3
 const MAX_PHOTOS = 9
 
 export function ProfileBuilder() {
-  const { profile, loading, analyzing, error, analyzePhotos } = useProfile()
+  const { profile, loading, analyzing, error, analyzePhotos, resetProfile } = useProfile()
   const { upload, uploading } = useScreenshotUpload()
   const [bioChoice, setBioChoice] = useState<BioChoice>('ask')
   const [existingBioText, setExistingBioText] = useState('')
   const [reviewFiles, setReviewFiles] = useState<File[]>([])
   const [previewUrls, setPreviewUrls] = useState<string[]>([])
   const [notes, setNotes] = useState('')
+  const [confirmingReset, setConfirmingReset] = useState(false)
+  const [resetting, setResetting] = useState(false)
+  const [resetError, setResetError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const busy = uploading || analyzing
@@ -62,6 +65,19 @@ export function ProfileBuilder() {
     if (!files.length) return
     const paths = await upload(files)
     await analyzePhotos(paths, text || undefined, bioChoice === 'existing' ? existingBioText.trim() : undefined)
+  }
+
+  const handleResetProfile = async () => {
+    setResetting(true)
+    setResetError(null)
+    const { error: err } = await resetProfile()
+    setResetting(false)
+    if (err) {
+      setResetError(err)
+      return
+    }
+    setConfirmingReset(false)
+    resetToAsk()
   }
 
   if (loading) return <LoadingSpinner />
@@ -304,6 +320,54 @@ export function ProfileBuilder() {
           />
           {busy && <AnalysisLoadingState />}
           {error && <p className="text-sm text-danger-700">{error}</p>}
+        </div>
+      )}
+
+      {analysis && (
+        <div className="rounded-2xl border border-danger-200 bg-white p-5">
+          <h2 className="text-sm font-semibold text-danger-700">Start over</h2>
+          {!confirmingReset ? (
+            <>
+              <p className="mt-1 text-sm text-neutral-500">
+                Clear your bio draft, prompt suggestions, and photo analysis to rebuild your
+                profile from scratch.
+              </p>
+              <button
+                type="button"
+                onClick={() => setConfirmingReset(true)}
+                className="mt-3 min-h-[44px] rounded-full border border-danger-300 px-4 text-sm font-semibold text-danger-600 hover:bg-danger-50"
+              >
+                Delete profile & start over
+              </button>
+            </>
+          ) : (
+            <div className="mt-3 space-y-3 rounded-xl bg-danger-50 p-4">
+              <p className="text-sm text-danger-800">
+                This clears your bio draft, prompt suggestions, and photo analysis so you can
+                rebuild your profile from scratch. Your account, matches, and conversation
+                history are not affected. This cannot be undone.
+              </p>
+              {resetError && <p className="text-sm text-danger-700">{resetError}</p>}
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setConfirmingReset(false)}
+                  disabled={resetting}
+                  className="min-h-[40px] flex-1 rounded-full border border-neutral-300 bg-white text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void handleResetProfile()}
+                  disabled={resetting}
+                  className="min-h-[40px] flex-1 rounded-full bg-danger-600 text-sm font-semibold text-white hover:bg-danger-700 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {resetting ? 'Clearing…' : 'Yes, start over'}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
