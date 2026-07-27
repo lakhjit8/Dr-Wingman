@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import type { Session, User } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabaseClient'
+import { extractFunctionErrorMessage } from '../lib/functionError'
 
 interface AuthContextValue {
   session: Session | null
@@ -9,6 +10,7 @@ interface AuthContextValue {
   signInWithEmail: (email: string) => Promise<{ error: string | null }>
   signInWithOAuth: (provider: 'google' | 'apple') => Promise<void>
   signOut: () => Promise<void>
+  deleteAccount: () => Promise<{ error: string | null }>
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
@@ -49,9 +51,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut()
   }
 
+  const deleteAccount: AuthContextValue['deleteAccount'] = async () => {
+    try {
+      const { error: fnError } = await supabase.functions.invoke('delete-account')
+      if (fnError) throw fnError
+      await supabase.auth.signOut()
+      return { error: null }
+    } catch (e) {
+      return { error: await extractFunctionErrorMessage(e, 'Failed to delete account') }
+    }
+  }
+
   return (
     <AuthContext.Provider
-      value={{ session, user: session?.user ?? null, loading, signInWithEmail, signInWithOAuth, signOut }}
+      value={{
+        session,
+        user: session?.user ?? null,
+        loading,
+        signInWithEmail,
+        signInWithOAuth,
+        signOut,
+        deleteAccount,
+      }}
     >
       {children}
     </AuthContext.Provider>

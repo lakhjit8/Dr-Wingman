@@ -1,16 +1,32 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useProfile } from '../hooks/useProfile'
 import { MONETIZATION_MODE } from '../lib/featureFlags'
 import { SAFETY_NOTICE_TEXT } from '../components/SafetyNotice'
+import { PageHeader } from '../components/PageHeader'
 
 export function Settings() {
-  const { user, signOut } = useAuth()
+  const { user, signOut, deleteAccount } = useAuth()
   const { profile } = useProfile()
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+
+  const handleDeleteAccount = async () => {
+    setDeleting(true)
+    setDeleteError(null)
+    const { error } = await deleteAccount()
+    if (error) {
+      setDeleteError(error)
+      setDeleting(false)
+    }
+    // On success, the auth state change fires and ProtectedRoute redirects to /login.
+  }
 
   return (
     <div className="max-w-lg space-y-6">
-      <h1 className="text-xl font-semibold text-neutral-900">Settings</h1>
+      <PageHeader title="Settings" />
 
       <div className="rounded-2xl border border-neutral-200 bg-white p-5">
         <h2 className="text-sm font-semibold text-neutral-700">Account</h2>
@@ -63,6 +79,42 @@ export function Settings() {
             <li key={line}>{line}</li>
           ))}
         </ul>
+      </div>
+
+      <div className="rounded-2xl border border-danger-200 bg-white p-5">
+        <h2 className="text-sm font-semibold text-danger-700">Danger zone</h2>
+        {!confirmingDelete ? (
+          <button
+            onClick={() => setConfirmingDelete(true)}
+            className="mt-3 min-h-[44px] rounded-full border border-danger-300 px-4 text-sm font-semibold text-danger-600 hover:bg-danger-50"
+          >
+            Delete account
+          </button>
+        ) : (
+          <div className="mt-3 space-y-3 rounded-xl bg-danger-50 p-4">
+            <p className="text-sm text-danger-800">
+              This permanently deletes your account, profile, matches, and all conversation
+              history. This cannot be undone.
+            </p>
+            {deleteError && <p className="text-sm text-danger-700">{deleteError}</p>}
+            <div className="flex gap-2">
+              <button
+                onClick={() => setConfirmingDelete(false)}
+                disabled={deleting}
+                className="min-h-[40px] flex-1 rounded-full border border-neutral-300 bg-white text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => void handleDeleteAccount()}
+                disabled={deleting}
+                className="min-h-[40px] flex-1 rounded-full bg-danger-600 text-sm font-semibold text-white hover:bg-danger-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {deleting ? 'Deleting…' : 'Yes, delete my account'}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
