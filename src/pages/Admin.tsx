@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAdminStats } from '../hooks/useAdminStats'
 import { LoadingSpinner } from '../components/LoadingSpinner'
+import { PageHeader } from '../components/PageHeader'
 
 const CHART_DAYS = 14
 const FEATURE_LABELS: Record<string, string> = {
@@ -100,10 +101,7 @@ export function Admin() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-xl font-semibold text-neutral-900">Admin</h1>
-        <p className="mt-1 text-sm text-neutral-500">Claude API usage, cost, and spending limits.</p>
-      </div>
+      <PageHeader title="Admin" subtitle="Claude API usage & spending limits" />
 
       {error && <p className="text-sm text-danger-700">{error}</p>}
 
@@ -244,8 +242,8 @@ export function Admin() {
 function StatCard({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
     <div className="rounded-2xl border border-neutral-200 bg-white p-4">
-      <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">{label}</p>
-      <p className="mt-1 text-2xl font-semibold text-neutral-900">{value}</p>
+      <p className="text-[9.5px] font-bold uppercase tracking-wide text-neutral-500">{label}</p>
+      <p className="mt-1 font-display text-xl font-bold text-neutral-900">{value}</p>
       {sub && <p className="mt-0.5 text-xs text-neutral-400">{sub}</p>}
     </div>
   )
