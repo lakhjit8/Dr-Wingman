@@ -34,7 +34,10 @@ export function matchAnalysisInstructions(platform?: string): string {
     'notes beneath them, never extract or output their real name, employer, school, or exact',
     'location — generate label_traits instead (2 short non-identifying style/vibe descriptors). Then',
     'draft 3 opening messages the user could send this match, per the opening_messages field,',
-    'applying the LENGTH RULE, ENERGY MATCHING, and EMOJI STRATEGY sections.',
+    'applying the LENGTH RULE, ENERGY MATCHING, and EMOJI STRATEGY sections. Per the PACING',
+    'GUIDELINES hard floors, opening_messages are message 1 — never suggest meeting up, gauge',
+    'openness to meeting, or reference a date/hangout in any of them; they are purely specific,',
+    'engaging openers.',
     'End your reply with the match_analysis JSON block exactly as specified in the',
     'APP-SPECIFIC OUTPUT CONTRACT.',
   ].join(' ')
@@ -43,9 +46,27 @@ export function matchAnalysisInstructions(platform?: string): string {
 export function messageCoachingInstructions(
   hasNewScreenshots: boolean,
   hasUserText: boolean,
+  nextUserMessageNumber: number,
   compaction?: { gapMessagesText: string }
 ): string {
   const parts = ['Mode: message_coaching.']
+  parts.push(
+    `The reply options you draft now will be the user's message #${nextUserMessageNumber} to this match.`,
+    nextUserMessageNumber === 1
+      ? 'Per the PACING GUIDELINES hard floors, do not suggest meeting up, gauge openness to meeting,'
+        + ' or reference a date/hangout at all — this is purely a specific, engaging opener.'
+      : nextUserMessageNumber === 2
+        ? 'Per the PACING GUIDELINES hard floors, a concrete meetup suggestion (day/time/venue) is not'
+          + ' allowed yet — you may gauge openness to meeting with a soft, non-committal signal if it fits'
+          + ' naturally, but nothing concrete.'
+        : 'A concrete meetup suggestion is allowed now per the PACING GUIDELINES hard floors, subject to'
+          + ' this match\'s pace tier (fast/medium/slow).',
+    'Separately: if a previous message from the user already suggested meeting up and the match\'s reply'
+      + ' changed the subject, gave a vague/non-committal response, or otherwise didn\'t address it, apply'
+      + ' the "If a Meetup Suggestion Gets Deflected or Redirected" special scenario — do not re-suggest or'
+      + ' rephrase the ask in suggested_replies; shift to general conversation-continuation options instead'
+      + ' and name the dynamic in momentum_note rather than pushing the ask again.'
+  )
   if (hasNewScreenshots) {
     parts.push(
       'The attached images are new screenshots of the ongoing conversation between the user and this match.',

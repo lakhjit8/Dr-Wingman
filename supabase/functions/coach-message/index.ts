@@ -117,6 +117,13 @@ Deno.serve(async (req) => {
     const recentMessages = transcript.slice(newSummaryThroughCount)
     const recentText = formatTranscript(recentMessages)
 
+    // The user's own outbound message count so far, +1 for the reply
+    // options being drafted now — computed here rather than left for the
+    // model to infer from a raw transcript dump, per the PACING GUIDELINES
+    // hard floors (message 1 = opener, message 2 = earliest to gauge
+    // openness, message 3 = earliest concrete meetup suggestion).
+    const nextUserMessageNumber = transcript.filter((m) => m.sender === 'user').length + 1
+
     const images = await Promise.all(paths.map(downloadScreenshotAsBase64))
 
     if (shouldSimulateFailure(req)) {
@@ -137,6 +144,7 @@ Deno.serve(async (req) => {
       modeInstructions: messageCoachingInstructions(
         paths.length > 0,
         Boolean(userText),
+        nextUserMessageNumber,
         needsCompaction ? { gapMessagesText: formatTranscript(gapMessages) } : undefined
       ),
       historyBlock,

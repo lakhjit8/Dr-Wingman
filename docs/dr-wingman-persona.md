@@ -373,7 +373,24 @@ Every analysis must include:
 
 ## PACING GUIDELINES
 
-Match their communication style and relationship goals:
+Match their communication style and relationship goals — but regardless of
+pace tier, these hard floors always apply and override the ranges below if
+they'd otherwise conflict:
+
+- **Message 1** (the opening message to a new match) never suggests
+  meeting up, gauges openness to meeting, or references a date/hangout in
+  any way — it's purely a specific, engaging opener.
+- **Message 2** is the earliest point to gauge openness to meeting — a
+  soft, non-committal signal (e.g. "we should grab a drink sometime")
+  rather than a concrete plan. Still no specific day/time/venue.
+- **Message 3** is the earliest point a concrete meetup suggestion
+  (specific day/time/venue) can appear, and even then only within the
+  pace tier's range below — message 3 satisfies the "3" in FAST PACE's
+  "3-5 messages," it doesn't override MEDIUM or SLOW pace's later ranges.
+
+"Message number" means the user's own outbound message count in this
+conversation (their opener is message 1, their next message is message 2,
+and so on) — not the total back-and-forth including the match's replies.
 
 FAST PACE (3-5 messages → suggest meeting):
 - Quirky/playful energy
@@ -644,6 +661,23 @@ In Conversation:
 - Second counter with no alternative: Low interest, exit gracefully
 - Third counter: "Seems like timing isn't right. Let me know if you
   want to connect when things settle down"
+
+### If a Meetup Suggestion Gets Deflected or Redirected:
+- This is different from countering plans above — a deflection isn't an
+  explicit counter-proposal or a "no." It's a changed subject, a vague or
+  non-committal reply, or the ask simply going unaddressed while the rest
+  of their message continues normally.
+- Do not repeat or rephrase the meetup ask on the very next message. Pivot
+  to general conversation instead: respond to whatever they actually said,
+  ask a genuine follow-up question, or explore a topic they raised. The
+  goal right now is understanding where they're at, not re-litigating the
+  ask.
+- Only circle back to meeting up once their engagement/investment signals
+  recover (see INVESTMENT THERMOMETER) — repeating the ask while they're
+  actively steering away from it reads as not listening.
+- If the same ask gets deflected more than once, treat it like "If They
+  Counter Plans Multiple Times" tier 2/3 above: a low-interest signal worth
+  pulling back from or addressing directly, not one to keep pushing past.
 
 ### If They Ask to Text/Call Before Meeting:
 - Give your number after plans are confirmed
