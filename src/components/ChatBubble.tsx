@@ -1,6 +1,7 @@
 import type { MatchMessage } from '../lib/types'
 import { Collapsible } from './Collapsible'
 import { FlagList } from './FlagIcon'
+import { CopyButton } from './CopyButton'
 
 interface MatchAnalysisMetadata {
   [key: string]: unknown
@@ -98,9 +99,13 @@ export function ChatBubble({ message }: { message: MatchMessage }) {
               </p>
               <div className="space-y-2">
                 {metadata.opening_messages.map((m, i) => (
-                  <p key={i} className="rounded-xl bg-neutral-50 p-3 text-sm leading-relaxed text-neutral-800">
-                    {m}
-                  </p>
+                  <div
+                    key={i}
+                    className="flex items-start gap-2 rounded-xl bg-neutral-50 p-3 text-sm leading-relaxed text-neutral-800"
+                  >
+                    <p className="flex-1">{m}</p>
+                    <CopyButton text={m} />
+                  </div>
                 ))}
               </div>
             </div>
@@ -130,9 +135,13 @@ export function ChatBubble({ message }: { message: MatchMessage }) {
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">Try one of these</p>
               <div className="space-y-2">
                 {metadata.suggested_replies.map((m, i) => (
-                  <p key={i} className="rounded-xl bg-neutral-50 p-3 text-sm leading-relaxed text-neutral-800">
-                    {m}
-                  </p>
+                  <div
+                    key={i}
+                    className="flex items-start gap-2 rounded-xl bg-neutral-50 p-3 text-sm leading-relaxed text-neutral-800"
+                  >
+                    <p className="flex-1">{m}</p>
+                    <CopyButton text={m} />
+                  </div>
                 ))}
               </div>
             </div>
