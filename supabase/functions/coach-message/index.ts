@@ -114,7 +114,31 @@ Deno.serve(async (req) => {
       throw new Error(`Dr. Wingman did not return a parseable coaching response (stop_reason: ${stopReason})`)
     }
 
-    const parsedMessages = (Array.isArray(json.parsed_messages) ? json.parsed_messages : []) as ParsedMessage[]
+    const allParsedMessages = (Array.isArray(json.parsed_messages) ? json.parsed_messages : []) as ParsedMessage[]
+
+    // A new screenshot's visible transcript naturally overlaps with
+    // messages already parsed from a previous screenshot (that's just how
+    // scrolled chat screenshots work) — the model is asked to extract only
+    // new messages, but can't reliably judge "new" from pixels alone, so
+    // this is the actual guarantee against re-inserting the same message
+    // as a duplicate row every time. Checked against the full stored
+    // history for this match, not just the last 50 (the context window
+    // above), so duplicates further back still get caught.
+    const { data: existingMessages } = await supabaseAdmin
+      .from('match_messages')
+      .select('sender, content')
+      .eq('match_id', matchId)
+      .in('sender', ['user', 'match'])
+    const seen = new Set((existingMessages ?? []).map((m) => `${m.sender}::${m.content}`))
+
+    const parsedMessages = allParsedMessages.filter((m) => {
+      if (!m?.text) return false
+      const sender = m.sender === 'match' ? 'match' : 'user'
+      const key = `${sender}::${m.text}`
+      if (seen.has(key)) return false
+      seen.add(key) // also dedupe repeats within this same batch
+      return true
+    })
 
     const rowsToInsert: {
       match_id: string

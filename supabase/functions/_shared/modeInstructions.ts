@@ -45,12 +45,16 @@ export function messageCoachingInstructions(hasNewScreenshots: boolean, hasUserT
   if (hasNewScreenshots) {
     parts.push(
       'The attached images are new screenshots of the ongoing conversation between the user and this match.',
-      'Parse every new message visible in the screenshots in chronological order, labeling each as',
-      '"user" (sent by the app user) or "match" (sent by the other person). Per the SAFETY & PRIVACY',
-      'REQUIREMENTS\' app-specific implementation notes, if the match\'s own message text includes',
-      'their real name (an introduction, a sign-off), replace it with "[name]" in the parsed_messages',
-      'text you output — never transcribe it verbatim, and never use their name anywhere else in your',
-      'reply either.'
+      'A screenshot of a scrolled chat naturally includes messages already covered by the',
+      '"Conversation and coaching history so far" above, not just brand-new ones — cross-reference against',
+      'that history and include in parsed_messages ONLY messages that are not already present there',
+      '(compare by sender + exact text). Do not re-list a message just because it\'s visible in the',
+      'screenshot if it already appears in the history above. Parse the remaining new messages in',
+      'chronological order, labeling each as "user" (sent by the app user) or "match" (sent by the other',
+      'person). Per the SAFETY & PRIVACY REQUIREMENTS\' app-specific implementation notes, if the match\'s',
+      'own message text includes their real name (an introduction, a sign-off), replace it with "[name]"',
+      'in the parsed_messages text you output — never transcribe it verbatim, and never use their name',
+      'anywhere else in your reply either.'
     )
   }
   if (hasUserText) {
