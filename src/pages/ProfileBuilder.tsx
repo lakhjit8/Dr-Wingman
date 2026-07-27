@@ -1,23 +1,19 @@
-import { useState } from 'react'
 import { useProfile } from '../hooks/useProfile'
 import { useScreenshotUpload } from '../hooks/useScreenshotUpload'
-import { UploadDropzone } from '../components/UploadDropzone'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { AnalysisLoadingState } from '../components/AnalysisLoadingState'
+import { Composer } from '../components/Composer'
 
 export function ProfileBuilder() {
   const { profile, loading, analyzing, error, analyzePhotos } = useProfile()
   const { upload, uploading } = useScreenshotUpload()
-  const [notes, setNotes] = useState('')
-  const [pendingFiles, setPendingFiles] = useState<File[]>([])
 
   const busy = uploading || analyzing
 
-  const handleAnalyze = async () => {
-    if (!pendingFiles.length) return
-    const paths = await upload(pendingFiles)
-    setPendingFiles([])
-    await analyzePhotos(paths, notes || undefined)
+  const handleAnalyze = async ({ files, text }: { files: File[]; text: string }) => {
+    if (!files.length) return
+    const paths = await upload(files)
+    await analyzePhotos(paths, text || undefined)
   }
 
   if (loading) return <LoadingSpinner />
@@ -34,39 +30,19 @@ export function ProfileBuilder() {
         </p>
       </div>
 
-      <UploadDropzone
-        label={pendingFiles.length ? `${pendingFiles.length} photo(s) selected` : 'Upload your photos'}
-        hint="Drag and drop, or click to browse"
-        onFilesSelected={(files) => setPendingFiles((prev) => [...prev, ...files])}
-        disabled={busy}
-      />
-
-      <div>
-        <label className="mb-1 block text-sm font-medium text-neutral-700">
-          Anything you want Dr. Wingman to know? (optional)
-        </label>
-        <textarea
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          rows={3}
-          placeholder="e.g. I'm looking for something serious, I travel a lot for work..."
-          className="w-full rounded-xl border border-neutral-300 p-3 text-sm focus:border-wingman-500 focus:outline-none"
+      {!analysis && (
+        <Composer
+          placeholder="Anything you want Dr. Wingman to know? (optional) e.g. I'm looking for something serious…"
+          attachLabel="Upload your photos"
+          sendLabel="Analyze photos & build profile"
+          busyLabel="Analyzing…"
+          disabled={busy}
+          onSubmit={handleAnalyze}
         />
-      </div>
-
-      <button
-        onClick={() => void handleAnalyze()}
-        disabled={!pendingFiles.length || busy}
-        className="min-h-[44px] rounded-full bg-wingman-600 px-5 text-sm font-medium text-white hover:bg-wingman-700 disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-400"
-      >
-        {busy ? 'Analyzing…' : 'Analyze photos & build profile'}
-      </button>
-      {!pendingFiles.length && !busy && (
-        <p className="-mt-4 text-xs text-neutral-400">Select photos above to enable this.</p>
       )}
 
-      {busy && <AnalysisLoadingState />}
-      {error && <p className="text-sm text-danger-700">{error}</p>}
+      {!analysis && busy && <AnalysisLoadingState />}
+      {!analysis && error && <p className="text-sm text-danger-700">{error}</p>}
 
       {analysis && (
         <div className="space-y-5 rounded-2xl border border-neutral-200 bg-white p-6">
@@ -143,6 +119,22 @@ export function ProfileBuilder() {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {analysis && (
+        <div>
+          <p className="mb-2 text-sm font-medium text-neutral-700">Add more photos to refine this</p>
+          <Composer
+            placeholder="Anything new you want Dr. Wingman to know? (optional)"
+            attachLabel="Add more photos"
+            sendLabel="Re-analyze"
+            busyLabel="Analyzing…"
+            disabled={busy}
+            onSubmit={handleAnalyze}
+          />
+          {busy && <AnalysisLoadingState />}
+          {error && <p className="text-sm text-danger-700">{error}</p>}
         </div>
       )}
     </div>
