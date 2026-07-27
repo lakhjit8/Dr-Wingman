@@ -6,6 +6,7 @@ import {
   supabaseAdmin,
 } from '../_shared/supabaseAdmin.ts'
 import { callDrWingman } from '../_shared/claude.ts'
+import { checkBeforeCall } from '../_shared/spendingGuard.ts'
 import { profileBuilderInstructions } from '../_shared/modeInstructions.ts'
 import { shouldSimulateFailure } from '../_shared/testMode.ts'
 
@@ -39,6 +40,19 @@ Deno.serve(async (req) => {
     if (paths.some((p) => !p.startsWith(`${user.id}/`))) {
       return new Response(JSON.stringify({ error: 'Invalid photo path' }), {
         status: 403,
+        headers: { ...corsHeaders, 'content-type': 'application/json' },
+      })
+    }
+
+    const guard = await checkBeforeCall({
+      userId: user.id,
+      feature: 'profile_builder',
+      textLength: (interviewNotes?.length ?? 0) + (existingBio?.length ?? 0),
+      imageCount: paths.length,
+    })
+    if (!guard.allowed) {
+      return new Response(JSON.stringify({ error: guard.reason }), {
+        status: 429,
         headers: { ...corsHeaders, 'content-type': 'application/json' },
       })
     }

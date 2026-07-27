@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../context/AuthContext'
+import { extractFunctionErrorMessage } from '../lib/functionError'
 import type { Match } from '../lib/types'
 
 export type MatchSort = 'last_message' | 'match_date'
@@ -102,7 +103,7 @@ export function useMatches() {
       await reload()
       return data?.matchId ?? null
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to analyze match profile')
+      setError(await extractFunctionErrorMessage(e, 'Failed to analyze match profile'))
       return null
     } finally {
       setCreating(false)

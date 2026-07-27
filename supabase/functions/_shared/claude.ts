@@ -2,7 +2,7 @@ import { DR_WINGMAN_PERSONA } from './persona.ts'
 import { supabaseAdmin } from './supabaseAdmin.ts'
 
 const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')!
-const CLAUDE_MODEL = Deno.env.get('CLAUDE_MODEL') ?? 'claude-sonnet-5'
+export const CLAUDE_MODEL = Deno.env.get('CLAUDE_MODEL') ?? 'claude-sonnet-5'
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages'
 
 export type Feature = 'profile_builder' | 'match_analysis' | 'message_coaching'

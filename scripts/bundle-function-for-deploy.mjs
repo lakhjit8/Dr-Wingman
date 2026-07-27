@@ -24,7 +24,15 @@ const sharedDir = join(root, 'supabase', 'functions', '_shared')
 const entryPath = join(root, 'supabase', 'functions', fnName, 'index.ts')
 
 // Fixed dependency order for our known _shared graph.
-const sharedOrder = ['persona.ts', 'cors.ts', 'supabaseAdmin.ts', 'claude.ts', 'modeInstructions.ts', 'testMode.ts']
+const sharedOrder = [
+  'persona.ts',
+  'cors.ts',
+  'supabaseAdmin.ts',
+  'claude.ts',
+  'spendingGuard.ts',
+  'modeInstructions.ts',
+  'testMode.ts',
+]
 
 function stripLocalImports(src) {
   // Handles both single-line (`import X from '../y.ts'`) and multi-line

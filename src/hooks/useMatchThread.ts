@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import { extractFunctionErrorMessage } from '../lib/functionError'
 import type { Match, MatchMessage } from '../lib/types'
 
 export function useMatchThread(matchId: string | undefined) {
@@ -61,13 +62,11 @@ export function useMatchThread(matchId: string | undefined) {
       if (fnError) throw fnError
       await reload()
     } catch (e) {
-      setError(
-        e instanceof Error
-          ? /aborted|timeout/i.test(e.message)
-            ? 'Dr. Wingman is taking longer than expected — please try again.'
-            : e.message
-          : 'Failed to get coaching response'
-      )
+      if (e instanceof Error && /aborted|timeout/i.test(e.message)) {
+        setError('Dr. Wingman is taking longer than expected — please try again.')
+      } else {
+        setError(await extractFunctionErrorMessage(e, 'Failed to get coaching response'))
+      }
     } finally {
       setCoaching(false)
     }

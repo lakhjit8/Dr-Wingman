@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../context/AuthContext'
+import { extractFunctionErrorMessage } from '../lib/functionError'
 import type { ProfileAnalysis, UserProfile } from '../lib/types'
 
 export function useProfile() {
@@ -41,7 +42,7 @@ export function useProfile() {
       await reload()
       return data?.analysis ?? null
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to analyze photos')
+      setError(await extractFunctionErrorMessage(e, 'Failed to analyze photos'))
       return null
     } finally {
       setAnalyzing(false)
