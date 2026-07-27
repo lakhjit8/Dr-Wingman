@@ -51,8 +51,6 @@ export interface MatchStyleSummary {
   yellow_flags: string[]
   red_flags: string[]
   opening_messages: string[]
-  /** Recurring theme observed across the user's other saved matches; null when fewer than 2 exist or none stands out. */
-  cross_match_patterns?: string | null
 }
 
 export interface Match {

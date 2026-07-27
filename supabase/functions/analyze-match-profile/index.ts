@@ -62,10 +62,8 @@ Deno.serve(async (req) => {
       throw new Error('Simulated Claude API failure (test mode)')
     }
 
-    const otherMatchesContext = await buildOtherMatchesContext(user.id, matchId)
-
     const { json, stopReason } = await callDrWingman({
-      modeInstructions: matchAnalysisInstructions(platform, otherMatchesContext),
+      modeInstructions: matchAnalysisInstructions(platform),
       images,
       userId: user.id,
       feature: 'match_analysis',
@@ -127,37 +125,6 @@ Deno.serve(async (req) => {
 })
 
 /**
- * Summarizes the user's other saved matches' style reads so the model can
- * look for cross-match patterns (per the cross-match patterns section of
- * the APP-SPECIFIC OUTPUT CONTRACT). Only returns context once the user has
- * 2+ *other* saved matches — with fewer than that there's nothing to
- * compare against, so the prompt stays empty and cross_match_patterns is
- * always null.
- */
-async function buildOtherMatchesContext(userId: string, excludeMatchId?: string): Promise<string | undefined> {
-  let query = supabaseAdmin
-    .from('matches')
-    .select('created_at, style_summary')
-    .eq('user_id', userId)
-    .eq('archived', false)
-    .not('style_summary', 'is', null)
-    .order('created_at', { ascending: false })
-    .limit(10)
-  if (excludeMatchId) query = query.neq('id', excludeMatchId)
-
-  const { data } = await query
-  if (!data || data.length < 2) return undefined
-
-  return data
-    .map((m, i) => {
-      const s = (m.style_summary ?? {}) as Record<string, unknown>
-      const date = new Date(m.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-      return `Match ${i + 1} (${date}): pace=${s.pace ?? 'unknown'}; compatibility notes: ${s.compatibility_notes ?? 'none'}`
-    })
-    .join('\n')
-}
-
-/**
  * Never the match's real name — two AI-generated, non-identifying style
  * traits plus the date the match was added, e.g. "Outdoorsy, direct
  * communicator (Jul 21)".
@@ -197,9 +164,6 @@ function buildCoachSummary(analysis: Record<string, unknown>): string {
     blocks.push(
       ['A few opening messages to consider:', ...openingMessages.map((m, i) => `${i + 1}. ${m}`)].join('\n')
     )
-  }
-  if (analysis.cross_match_patterns) {
-    blocks.push(`Patterns across your matches: ${analysis.cross_match_patterns}`)
   }
   return blocks.filter(Boolean).join('\n\n').trim()
 }

@@ -23,7 +23,7 @@ export function profileBuilderInstructions(interviewNotes?: string, existingBio?
     .join(' ')
 }
 
-export function matchAnalysisInstructions(platform?: string, otherMatchesContext?: string): string {
+export function matchAnalysisInstructions(platform?: string): string {
   return [
     'Mode: match_analysis.',
     'The attached images are screenshots of a dating profile belonging to someone the user matched',
@@ -35,20 +35,9 @@ export function matchAnalysisInstructions(platform?: string, otherMatchesContext
     'location — generate label_traits instead (2 short non-identifying style/vibe descriptors). Then',
     'draft 3 opening messages the user could send this match, per the opening_messages field,',
     'applying the LENGTH RULE, ENERGY MATCHING, and EMOJI STRATEGY sections.',
-    otherMatchesContext
-      ? [
-          'The user has other saved matches with these prior communication-style reads:',
-          otherMatchesContext,
-          'Per the cross-match patterns section of the APP-SPECIFIC OUTPUT CONTRACT, look for a',
-          'recurring theme across them and this new match and surface it in cross_match_patterns,',
-          'staying interpretive and hedged. If nothing meaningful stands out, set it to null.',
-        ].join(' ')
-      : '',
     'End your reply with the match_analysis JSON block exactly as specified in the',
     'APP-SPECIFIC OUTPUT CONTRACT.',
-  ]
-    .filter(Boolean)
-    .join(' ')
+  ].join(' ')
 }
 
 export function messageCoachingInstructions(hasNewScreenshots: boolean, hasUserText: boolean): string {

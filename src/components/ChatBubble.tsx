@@ -13,7 +13,6 @@ interface MatchAnalysisMetadata {
   yellow_flags?: string[]
   red_flags?: string[]
   opening_messages?: string[]
-  cross_match_patterns?: string | null
 }
 
 interface MessageCoachingMetadata {
@@ -90,15 +89,6 @@ export function ChatBubble({ message }: { message: MatchMessage }) {
                   )}
                 </div>
               </Collapsible>
-            </div>
-          )}
-
-          {metadata.cross_match_patterns && (
-            <div className="mb-3 rounded-xl border border-wingman-200 bg-wingman-50 p-3">
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-wingman-700">
-                Patterns across your matches
-              </p>
-              <p className="text-sm leading-relaxed text-neutral-700">{metadata.cross_match_patterns}</p>
             </div>
           )}
 
