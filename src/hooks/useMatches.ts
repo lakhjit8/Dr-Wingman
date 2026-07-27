@@ -19,6 +19,7 @@ export function useMatches() {
   const [sortBy, setSortBy] = useState<MatchSort>('last_message')
   const [sortAscending, setSortAscending] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [messageMatchIds, setMessageMatchIds] = useState<Set<string> | null>(null)
 
   const reload = useCallback(async () => {
     if (!user) return
@@ -38,12 +39,45 @@ export function useMatches() {
     void reload()
   }, [reload])
 
-  const normalizedQuery = searchQuery.trim().toLowerCase()
+  const normalizedQuery = searchQuery.trim()
+
+  // Also searches match_messages content — the flattened text of every
+  // coach-generated message (opening lines, suggested replies, reading/
+  // translation, momentum notes) and the transcribed conversation — not
+  // just match_label/compatibility_notes. Debounced since, unlike the
+  // client-side label/notes filter, this is a network query per keystroke.
+  useEffect(() => {
+    if (!user || !normalizedQuery) {
+      setMessageMatchIds(null)
+      return
+    }
+    let cancelled = false
+    const timer = setTimeout(async () => {
+      const { data, error: searchError } = await supabase
+        .from('match_messages')
+        .select('match_id')
+        .eq('user_id', user.id)
+        .ilike('content', `%${normalizedQuery}%`)
+      if (cancelled) return
+      if (searchError) {
+        setError(searchError.message)
+        return
+      }
+      setMessageMatchIds(new Set((data ?? []).map((r) => r.match_id as string)))
+    }, 300)
+    return () => {
+      cancelled = true
+      clearTimeout(timer)
+    }
+  }, [user, normalizedQuery])
+
+  const lowerQuery = normalizedQuery.toLowerCase()
   const visibleMatches = normalizedQuery
     ? matches.filter(
         (m) =>
-          m.match_label.toLowerCase().includes(normalizedQuery) ||
-          m.style_summary?.compatibility_notes?.toLowerCase().includes(normalizedQuery)
+          m.match_label.toLowerCase().includes(lowerQuery) ||
+          m.style_summary?.compatibility_notes?.toLowerCase().includes(lowerQuery) ||
+          messageMatchIds?.has(m.id)
       )
     : matches
 
