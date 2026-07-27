@@ -8,7 +8,18 @@ import { AnalysisLoadingState } from '../components/AnalysisLoadingState'
 import { truncateAtWord } from '../lib/text'
 
 export function MatchList() {
-  const { matches, loading, creating, error, createFromScreenshots } = useMatches()
+  const {
+    matches,
+    loading,
+    creating,
+    error,
+    createFromScreenshots,
+    sortBy,
+    setSortBy,
+    sortAscending,
+    setSortAscending,
+    togglePin,
+  } = useMatches()
   const { upload, uploading } = useScreenshotUpload()
   const navigate = useNavigate()
   const [pendingFiles, setPendingFiles] = useState<File[]>([])
@@ -63,6 +74,32 @@ export function MatchList() {
         </div>
       )}
 
+      {!loading && matches.length > 0 && (
+        <div className="flex items-center gap-2 text-sm">
+          <label htmlFor="match-sort" className="text-neutral-500">
+            Sort by
+          </label>
+          <select
+            id="match-sort"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+            className="min-h-[36px] rounded-full border border-neutral-300 bg-white px-3 text-sm text-neutral-700 focus:border-wingman-500 focus:outline-none"
+          >
+            <option value="last_message">Last active</option>
+            <option value="match_date">Matched date</option>
+          </select>
+          <button
+            type="button"
+            onClick={() => setSortAscending((v) => !v)}
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-300 text-neutral-500 hover:bg-neutral-100"
+            aria-label={sortAscending ? 'Sort descending' : 'Sort ascending'}
+            title={sortAscending ? 'Oldest first' : 'Newest first'}
+          >
+            {sortAscending ? '↑' : '↓'}
+          </button>
+        </div>
+      )}
+
       {loading ? (
         <LoadingSpinner />
       ) : matches.length === 0 ? (
@@ -92,10 +129,15 @@ export function MatchList() {
       ) : (
         <div className="grid gap-3 sm:grid-cols-2">
           {matches.map((m) => (
-            <button
+            <div
               key={m.id}
+              role="button"
+              tabIndex={0}
               onClick={() => navigate(`/matches/${m.id}`)}
-              className="flex min-h-[44px] items-start justify-between gap-3 rounded-2xl border border-neutral-200 bg-white p-4 text-left transition-colors hover:border-wingman-300 hover:shadow-sm"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') navigate(`/matches/${m.id}`)
+              }}
+              className="flex min-h-[44px] cursor-pointer items-start justify-between gap-3 rounded-2xl border border-neutral-200 bg-white p-4 text-left transition-colors hover:border-wingman-300 hover:shadow-sm"
             >
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
@@ -113,17 +155,41 @@ export function MatchList() {
                   </p>
                 )}
               </div>
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                className="mt-1 shrink-0 text-neutral-300"
-                aria-hidden="true"
-              >
-                <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
+              <div className="flex shrink-0 flex-col items-center gap-2">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    void togglePin(m.id, !m.pinned)
+                  }}
+                  aria-label={m.pinned ? 'Unpin match' : 'Pin match to top'}
+                  aria-pressed={m.pinned}
+                  title={m.pinned ? 'Unpin' : 'Pin to top'}
+                  className={`flex h-8 w-8 items-center justify-center rounded-full ${
+                    m.pinned ? 'text-wingman-600' : 'text-neutral-300 hover:text-neutral-500'
+                  }`}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill={m.pinned ? 'currentColor' : 'none'} aria-hidden="true">
+                    <path
+                      d="M12 2l1.5 6.5L20 10l-6 4 1 7-3-3.5L9 21l1-7-6-4 6.5-1.5L12 2Z"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="shrink-0 text-neutral-300"
+                  aria-hidden="true"
+                >
+                  <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+            </div>
           ))}
         </div>
       )}

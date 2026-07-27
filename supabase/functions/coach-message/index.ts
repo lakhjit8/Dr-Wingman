@@ -134,7 +134,10 @@ Deno.serve(async (req) => {
     const { error: insertError } = await supabaseAdmin.from('match_messages').insert(rowsToInsert)
     if (insertError) throw insertError
 
-    await supabaseAdmin.from('matches').update({ updated_at: new Date().toISOString() }).eq('id', matchId)
+    await supabaseAdmin
+      .from('matches')
+      .update({ last_message_at: new Date().toISOString() })
+      .eq('id', matchId)
 
     return new Response(JSON.stringify({ ok: true, analysis: json }), {
       headers: { ...corsHeaders, 'content-type': 'application/json' },

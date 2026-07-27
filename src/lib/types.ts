@@ -59,8 +59,10 @@ export interface Match {
   match_label: string
   style_summary: MatchStyleSummary | null
   archived: boolean
+  pinned: boolean
   created_at: string
   updated_at: string
+  last_message_at: string
 }
 
 export type MessageSender = 'user' | 'match' | 'coach'
