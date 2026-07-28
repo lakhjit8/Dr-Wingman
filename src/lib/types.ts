@@ -62,6 +62,7 @@ export interface Match {
   style_summary: MatchStyleSummary | null
   archived: boolean
   pinned: boolean
+  deleted_at: string | null
   created_at: string
   updated_at: string
   last_message_at: string
@@ -75,5 +76,27 @@ export interface MatchMessage {
   sender: MessageSender
   content: string
   metadata: Record<string, unknown> | null
+  created_at: string
+}
+
+export interface AdminUserSummary {
+  id: string
+  email: string | null
+  displayName: string | null
+  isAdmin: boolean
+  createdAt: string
+  matchCount: number
+  lastActiveAt: string | null
+  monthSpendUsd: number
+}
+
+export type AuditAction = 'user_delete' | 'data_export'
+
+export interface AuditLogEntry {
+  id: string
+  admin_user_id: string
+  action: AuditAction
+  target_user_id: string | null
+  request_reference: string
   created_at: string
 }

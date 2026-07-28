@@ -29,6 +29,7 @@ export function useMatches() {
       .from('matches')
       .select('*')
       .eq('archived', false)
+      .is('deleted_at', null)
       .order('pinned', { ascending: false })
       .order(SORT_COLUMN[sortBy], { ascending: sortAscending })
     if (fetchError) setError(fetchError.message)
@@ -91,6 +92,22 @@ export function useMatches() {
     await reload()
   }
 
+  // Soft-delete: hides the match immediately (reload() re-applies the
+  // deleted_at is null filter above); the row is hard-purged by the
+  // purge-deleted-matches cron job after a 72h grace window, per
+  // docs/admin-role-and-match-deletion-spec.md §1.
+  const deleteMatch = async (matchId: string) => {
+    const { error: deleteError } = await supabase
+      .from('matches')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('id', matchId)
+    if (deleteError) {
+      setError(deleteError.message)
+      return
+    }
+    await reload()
+  }
+
   const createFromScreenshots = async (paths: string[], platform?: string) => {
     setCreating(true)
     setError(null)
@@ -123,6 +140,7 @@ export function useMatches() {
     sortAscending,
     setSortAscending,
     togglePin,
+    deleteMatch,
     searchQuery,
     setSearchQuery,
   }

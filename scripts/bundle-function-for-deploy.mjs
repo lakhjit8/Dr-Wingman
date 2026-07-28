@@ -28,6 +28,7 @@ const sharedOrder = [
   'persona.ts',
   'cors.ts',
   'supabaseAdmin.ts',
+  'adminAuth.ts',
   'claude.ts',
   'spendingGuard.ts',
   'modeInstructions.ts',

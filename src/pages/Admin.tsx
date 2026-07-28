@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useAdminStats } from '../hooks/useAdminStats'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { PageHeader } from '../components/PageHeader'
@@ -102,6 +103,15 @@ export function Admin() {
   return (
     <div className="space-y-6">
       <PageHeader title="Admin" subtitle="Claude API usage & spending limits" />
+
+      <div className="flex gap-3 text-sm">
+        <Link to="/admin/users" className="text-wingman-700 underline">
+          Users →
+        </Link>
+        <Link to="/admin/audit-log" className="text-wingman-700 underline">
+          Audit log →
+        </Link>
+      </div>
 
       {error && <p className="text-sm text-danger-700">{error}</p>}
 

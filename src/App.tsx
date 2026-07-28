@@ -12,6 +12,9 @@ import { MatchList } from './pages/MatchList'
 import { MatchThread } from './pages/MatchThread'
 import { Settings } from './pages/Settings'
 import { Admin } from './pages/Admin'
+import { AdminUsers } from './pages/AdminUsers'
+import { AdminUserDetail } from './pages/AdminUserDetail'
+import { AuditLog } from './pages/AuditLog'
 
 export default function App() {
   return (
@@ -39,6 +42,30 @@ export default function App() {
               element={
                 <AdminRoute>
                   <Admin />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <AdminRoute>
+                  <AdminUsers />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/users/:id"
+              element={
+                <AdminRoute>
+                  <AdminUserDetail />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/audit-log"
+              element={
+                <AdminRoute>
+                  <AuditLog />
                 </AdminRoute>
               }
             />

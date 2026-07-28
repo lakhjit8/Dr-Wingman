@@ -20,6 +20,7 @@ export function MatchList() {
     sortAscending,
     setSortAscending,
     togglePin,
+    deleteMatch,
     searchQuery,
     setSearchQuery,
   } = useMatches()
@@ -27,6 +28,7 @@ export function MatchList() {
   const navigate = useNavigate()
   const [pendingFiles, setPendingFiles] = useState<File[]>([])
   const [showUpload, setShowUpload] = useState(false)
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
 
   const busy = uploading || creating
 
@@ -147,8 +149,12 @@ export function MatchList() {
               key={m.id}
               role="button"
               tabIndex={0}
-              onClick={() => navigate(`/matches/${m.id}`)}
+              onClick={() => {
+                if (confirmDeleteId === m.id) return
+                navigate(`/matches/${m.id}`)
+              }}
               onKeyDown={(e) => {
+                if (confirmDeleteId === m.id) return
                 if (e.key === 'Enter' || e.key === ' ') navigate(`/matches/${m.id}`)
               }}
               className="flex min-h-[44px] cursor-pointer items-start gap-3 rounded-2xl border border-neutral-200 bg-white p-3.5 text-left transition-colors hover:border-wingman-300 hover:shadow-sm"
@@ -169,29 +175,77 @@ export function MatchList() {
                     {m.style_summary.compatibility_notes}
                   </p>
                 )}
+                {confirmDeleteId === m.id && (
+                  <div className="mt-2 flex items-center gap-2 rounded-xl bg-danger-50 p-2">
+                    <p className="flex-1 text-xs text-danger-800">Delete this match?</p>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setConfirmDeleteId(null)
+                      }}
+                      className="min-h-[28px] rounded-full border border-neutral-300 bg-white px-2.5 text-xs font-medium text-neutral-700 hover:bg-neutral-50"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        void deleteMatch(m.id)
+                        setConfirmDeleteId(null)
+                      }}
+                      className="min-h-[28px] rounded-full bg-danger-600 px-2.5 text-xs font-semibold text-white hover:bg-danger-700"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
               </div>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  void togglePin(m.id, !m.pinned)
-                }}
-                aria-label={m.pinned ? 'Unpin match' : 'Pin match to top'}
-                aria-pressed={m.pinned}
-                title={m.pinned ? 'Unpin' : 'Pin to top'}
-                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
-                  m.pinned ? 'text-amber-500' : 'text-neutral-300 hover:text-neutral-500'
-                }`}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill={m.pinned ? 'currentColor' : 'none'} aria-hidden="true">
-                  <path
-                    d="M12 2l1.5 6.5L20 10l-6 4 1 7-3-3.5L9 21l1-7-6-4 6.5-1.5L12 2Z"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
+              <div className="flex shrink-0 flex-col items-center gap-1">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    void togglePin(m.id, !m.pinned)
+                  }}
+                  aria-label={m.pinned ? 'Unpin match' : 'Pin match to top'}
+                  aria-pressed={m.pinned}
+                  title={m.pinned ? 'Unpin' : 'Pin to top'}
+                  className={`flex h-8 w-8 items-center justify-center rounded-full ${
+                    m.pinned ? 'text-amber-500' : 'text-neutral-300 hover:text-neutral-500'
+                  }`}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill={m.pinned ? 'currentColor' : 'none'} aria-hidden="true">
+                    <path
+                      d="M12 2l1.5 6.5L20 10l-6 4 1 7-3-3.5L9 21l1-7-6-4 6.5-1.5L12 2Z"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setConfirmDeleteId(m.id)
+                  }}
+                  aria-label="Delete match"
+                  title="Delete"
+                  className="flex h-8 w-8 items-center justify-center rounded-full text-neutral-300 hover:text-danger-600"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path
+                      d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0-1 13a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1L6 7h12Z"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           ))}
         </div>
