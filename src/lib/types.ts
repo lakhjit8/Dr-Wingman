@@ -100,3 +100,10 @@ export interface AuditLogEntry {
   request_reference: string
   created_at: string
 }
+
+export interface Feedback {
+  id: string
+  user_id: string
+  message: string
+  created_at: string
+}

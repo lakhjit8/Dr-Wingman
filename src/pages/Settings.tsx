@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useProfile } from '../hooks/useProfile'
+import { useFeedback } from '../hooks/useFeedback'
 import { MONETIZATION_MODE } from '../lib/featureFlags'
 import { SAFETY_NOTICE_TEXT } from '../components/SafetyNotice'
 import { PageHeader } from '../components/PageHeader'
@@ -12,6 +13,13 @@ export function Settings() {
   const [confirmingDelete, setConfirmingDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
+  const { submitFeedback, submitting, error: feedbackError, submitted, resetSubmitted } = useFeedback()
+  const [feedbackText, setFeedbackText] = useState('')
+
+  const handleSubmitFeedback = async () => {
+    const ok = await submitFeedback(feedbackText)
+    if (ok) setFeedbackText('')
+  }
 
   const handleDeleteAccount = async () => {
     setDeleting(true)
@@ -61,6 +69,32 @@ export function Settings() {
             Privacy Policy
           </Link>
         </div>
+      </div>
+
+      <div className="rounded-2xl border border-neutral-200 bg-white p-5">
+        <h2 className="text-sm font-semibold text-neutral-700">Feedback</h2>
+        <p className="mt-1 text-sm text-neutral-500">
+          Bug reports, feature requests, anything else — goes straight to the person building this.
+        </p>
+        <textarea
+          value={feedbackText}
+          onChange={(e) => {
+            setFeedbackText(e.target.value)
+            if (submitted) resetSubmitted()
+          }}
+          rows={3}
+          placeholder="What's on your mind?"
+          className="mt-3 w-full rounded-xl border border-neutral-300 p-3 text-sm focus:border-wingman-500 focus:outline-none"
+        />
+        {feedbackError && <p className="mt-2 text-sm text-danger-700">{feedbackError}</p>}
+        {submitted && !feedbackText && <p className="mt-2 text-sm text-wingman-700">Thanks — got it.</p>}
+        <button
+          onClick={() => void handleSubmitFeedback()}
+          disabled={!feedbackText.trim() || submitting}
+          className="mt-3 min-h-[40px] rounded-full bg-wingman-600 px-4 text-sm font-medium text-white hover:bg-wingman-700 disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-400"
+        >
+          {submitting ? 'Sending…' : 'Send feedback'}
+        </button>
       </div>
 
       {profile?.is_admin && (

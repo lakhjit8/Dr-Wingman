@@ -15,6 +15,7 @@ import { Admin } from './pages/Admin'
 import { AdminUsers } from './pages/AdminUsers'
 import { AdminUserDetail } from './pages/AdminUserDetail'
 import { AuditLog } from './pages/AuditLog'
+import { AdminFeedback } from './pages/AdminFeedback'
 
 export default function App() {
   return (
@@ -66,6 +67,14 @@ export default function App() {
               element={
                 <AdminRoute>
                   <AuditLog />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/feedback"
+              element={
+                <AdminRoute>
+                  <AdminFeedback />
                 </AdminRoute>
               }
             />
