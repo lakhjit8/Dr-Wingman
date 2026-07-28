@@ -15,10 +15,6 @@ export function Privacy() {
             <br />
             Operated by: {LLC_LEGAL_NAME}, a California limited liability company
           </p>
-          <p className="mt-2 text-sm italic text-white/35">
-            Founder-assembled draft — not final legal advice. Pending attorney review before this
-            goes live publicly.
-          </p>
         </div>
       </div>
 
