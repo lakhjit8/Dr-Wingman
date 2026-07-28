@@ -3,6 +3,11 @@ import { Link, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { WingMark } from '../components/WingMark'
 
+// Google/Apple aren't configured as OAuth providers in Supabase yet (needs
+// developer-console setup on both sides first) — hidden rather than left
+// live and broken. Flip back on once both are wired up.
+const OAUTH_ENABLED = false
+
 export function Login() {
   const { user, signInWithEmail, signInWithOAuth } = useAuth()
   const [email, setEmail] = useState('')
@@ -57,28 +62,32 @@ export function Login() {
           </span>
         </label>
 
-        <div className="mt-4 space-y-2">
-          <button
-            onClick={() => void signInWithOAuth('google')}
-            disabled={!agreed}
-            className="min-h-[44px] w-full rounded-full border border-neutral-300 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Continue with Google
-          </button>
-          <button
-            onClick={() => void signInWithOAuth('apple')}
-            disabled={!agreed}
-            className="min-h-[44px] w-full rounded-full border border-neutral-300 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Continue with Apple
-          </button>
-        </div>
+        {OAUTH_ENABLED && (
+          <>
+            <div className="mt-4 space-y-2">
+              <button
+                onClick={() => void signInWithOAuth('google')}
+                disabled={!agreed}
+                className="min-h-[44px] w-full rounded-full border border-neutral-300 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Continue with Google
+              </button>
+              <button
+                onClick={() => void signInWithOAuth('apple')}
+                disabled={!agreed}
+                className="min-h-[44px] w-full rounded-full border border-neutral-300 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Continue with Apple
+              </button>
+            </div>
 
-        <div className="my-5 flex items-center gap-3 text-xs text-neutral-400">
-          <div className="h-px flex-1 bg-neutral-200" />
-          or
-          <div className="h-px flex-1 bg-neutral-200" />
-        </div>
+            <div className="my-5 flex items-center gap-3 text-xs text-neutral-400">
+              <div className="h-px flex-1 bg-neutral-200" />
+              or
+              <div className="h-px flex-1 bg-neutral-200" />
+            </div>
+          </>
+        )}
 
         {status === 'sent' ? (
           <p className="rounded-xl bg-wingman-50 p-3 text-center text-sm text-wingman-700">

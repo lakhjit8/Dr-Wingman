@@ -38,6 +38,7 @@ export interface UserProfile {
   terms_version: string | null
   safety_notice_shown_at: string | null
   is_admin: boolean
+  invite_verified: boolean
   created_at: string
   updated_at: string
 }
@@ -105,5 +106,13 @@ export interface Feedback {
   id: string
   user_id: string
   message: string
+  created_at: string
+}
+
+export interface InviteCode {
+  code: string
+  note: string | null
+  used_by: string | null
+  used_at: string | null
   created_at: string
 }

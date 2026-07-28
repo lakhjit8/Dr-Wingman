@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { AdminRoute } from './components/AdminRoute'
+import { InviteGate } from './components/InviteGate'
 import { TermsGate } from './components/TermsGate'
 import { Layout } from './components/Layout'
 import { Login } from './pages/Login'
@@ -16,6 +17,7 @@ import { AdminUsers } from './pages/AdminUsers'
 import { AdminUserDetail } from './pages/AdminUserDetail'
 import { AuditLog } from './pages/AuditLog'
 import { AdminFeedback } from './pages/AdminFeedback'
+import { AdminInviteCodes } from './pages/AdminInviteCodes'
 
 export default function App() {
   return (
@@ -28,9 +30,11 @@ export default function App() {
           <Route
             element={
               <ProtectedRoute>
-                <TermsGate>
-                  <Layout />
-                </TermsGate>
+                <InviteGate>
+                  <TermsGate>
+                    <Layout />
+                  </TermsGate>
+                </InviteGate>
               </ProtectedRoute>
             }
           >
@@ -75,6 +79,14 @@ export default function App() {
               element={
                 <AdminRoute>
                   <AdminFeedback />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/invite-codes"
+              element={
+                <AdminRoute>
+                  <AdminInviteCodes />
                 </AdminRoute>
               }
             />

@@ -114,6 +114,9 @@ export function Admin() {
         <Link to="/admin/feedback" className="text-wingman-700 underline">
           Feedback →
         </Link>
+        <Link to="/admin/invite-codes" className="text-wingman-700 underline">
+          Invite codes →
+        </Link>
       </div>
 
       {error && <p className="text-sm text-danger-700">{error}</p>}
