@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../context/AuthContext'
-import { extractFunctionErrorMessage } from '../lib/functionError'
+import { extractFunctionErrorMessage, isTimeoutError } from '../lib/functionError'
 import type { Match } from '../lib/types'
 
 export type MatchSort = 'last_message' | 'match_date'
@@ -120,7 +120,11 @@ export function useMatches() {
       await reload()
       return data?.matchId ?? null
     } catch (e) {
-      setError(await extractFunctionErrorMessage(e, 'Failed to analyze match profile'))
+      if (isTimeoutError(e)) {
+        setError('Dr. Wingman is taking longer than expected — refresh in a moment, it may still finish.')
+      } else {
+        setError(await extractFunctionErrorMessage(e, 'Failed to analyze match profile'))
+      }
       return null
     } finally {
       setCreating(false)

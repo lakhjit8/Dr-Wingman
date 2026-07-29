@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
-import { extractFunctionErrorMessage } from '../lib/functionError'
+import { extractFunctionErrorMessage, isTimeoutError } from '../lib/functionError'
 import type { Match, MatchMessage } from '../lib/types'
 
 export function useMatchThread(matchId: string | undefined) {
@@ -62,8 +62,8 @@ export function useMatchThread(matchId: string | undefined) {
       if (fnError) throw fnError
       await reload()
     } catch (e) {
-      if (e instanceof Error && /aborted|timeout/i.test(e.message)) {
-        setError('Dr. Wingman is taking longer than expected — please try again.')
+      if (isTimeoutError(e)) {
+        setError('Dr. Wingman is taking longer than expected — refresh in a moment, it may still finish.')
       } else {
         setError(await extractFunctionErrorMessage(e, 'Failed to get coaching response'))
       }

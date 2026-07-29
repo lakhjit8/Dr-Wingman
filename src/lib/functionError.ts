@@ -1,4 +1,4 @@
-import { FunctionsHttpError } from '@supabase/supabase-js'
+import { FunctionsFetchError, FunctionsHttpError } from '@supabase/supabase-js'
 
 /**
  * supabase-js's thrown error.message on a non-2xx Edge Function response is
@@ -17,4 +17,19 @@ export async function extractFunctionErrorMessage(err: unknown, fallback: string
     }
   }
   return err instanceof Error ? err.message : fallback
+}
+
+/**
+ * When the client-side `timeout` passed to `functions.invoke()` elapses,
+ * supabase-js aborts the underlying fetch and always throws
+ * FunctionsFetchError with the fixed message "Failed to send a request to
+ * the Edge Function" — the same message it uses for a genuine network
+ * failure. The only way to tell an abort apart from a real network error is
+ * to look inside `context`, which holds the raw fetch rejection (a
+ * DOMException named "AbortError" in this case). The Edge Function itself
+ * keeps running after the client gives up, so this is worth distinguishing:
+ * the user hasn't hit a dead end, the response is just still in flight.
+ */
+export function isTimeoutError(err: unknown): boolean {
+  return err instanceof FunctionsFetchError && err.context?.name === 'AbortError'
 }

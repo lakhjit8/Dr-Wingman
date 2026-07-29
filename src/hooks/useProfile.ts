@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../context/AuthContext'
-import { extractFunctionErrorMessage } from '../lib/functionError'
+import { extractFunctionErrorMessage, isTimeoutError } from '../lib/functionError'
 import type { ProfileAnalysis, UserProfile } from '../lib/types'
 
 export function useProfile() {
@@ -58,7 +58,11 @@ export function useProfile() {
       await reload()
       return data?.analysis ?? null
     } catch (e) {
-      setError(await extractFunctionErrorMessage(e, 'Failed to analyze photos'))
+      if (isTimeoutError(e)) {
+        setError('Dr. Wingman is taking longer than expected — refresh in a moment, it may still finish.')
+      } else {
+        setError(await extractFunctionErrorMessage(e, 'Failed to analyze photos'))
+      }
       return null
     } finally {
       setAnalyzing(false)
